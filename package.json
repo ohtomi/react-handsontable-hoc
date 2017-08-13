@@ -1,0 +1,49 @@
+{
+  "name": "react-handsontable-hoc",
+  "version": "0.1.0",
+  "description": "A higher order component for react-handsontable",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "run-s lint flow compile test",
+    "clear": "rimraf dist coverage .nyc_output",
+    "flow": "flow",
+    "lint": "eslint src/ test/",
+    "compile": "cross-env NODE_ENV=production webpack --progress --profile",
+    "test": "cross-env NODE_ENV=test ava --verbose",
+    "cover": "nyc --reporter=html --reporter=text npm run test",
+    "start": "cross-env NODE_ENV=development webpack-dev-server",
+    "storybook": "start-storybook -p 9080",
+    "watch": "run-p watch:*",
+    "watch:src": "chokidar src/**/*.js -c \"npm run compile\"",
+    "watch:test": "chokidar test/**/*.js -c \"cross-env NODE_ENV=test ava --tap {path} | tap-notify\""
+  },
+  "peerDependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-handsontable": "^0.3.1"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@storybook/react": "^3.2.4",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-handsontable": "^0.3.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ohtomi/react-handsontable-hoc.git"
+  },
+  "keywords": [
+    "react",
+    "handsontable"
+  ],
+  "author": "Kenichi Ohtomi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ohtomi/react-handsontable-hoc/issues"
+  },
+  "homepage": "https://github.com/ohtomi/react-handsontable-hoc#readme",
+}
