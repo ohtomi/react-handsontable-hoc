@@ -1,5 +1,5 @@
 {
-  "name": "react-handsontable-hoc",
+  "name": "@ohtomi/react-handsontable-hoc",
   "version": "0.1.0",
   "description": "A higher order component for react-handsontable",
   "main": "dist/index.js",
@@ -28,9 +28,37 @@
   "dependencies": {},
   "devDependencies": {
     "@storybook/react": "^3.2.4",
+    "ava": "^0.21.0",
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-flow": "^6.23.0",
+    "babel-preset-react": "^6.24.1",
+    "chokidar-cli": "^1.2.0",
+    "enzyme": "^2.9.1",
+    "eslint": "^4.4.1",
+    "eslint-import-resolver-node": "^0.3.1",
+    "eslint-plugin-ava": "^4.2.1",
+    "eslint-plugin-flowtype": "^2.35.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-react": "^7.2.0",
+    "eslint-plugin-security": "^1.4.0",
+    "flow-bin": "^0.52.0",
+    "flow-typed": "^2.1.5",
+    "npm-run-all": "^4.0.2",
+    "nyc": "^11.1.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-handsontable": "^0.3.1"
+    "react-handsontable": "^0.3.1",
+    "react-test-renderer": "^15.6.1",
+    "rimraf": "^2.6.1",
+    "sinon": "^3.2.0",
+    "tap-notify": "^1.0.0",
+    "webpack": "^3.5.4",
+    "webpack-dev-server": "^2.7.1"
   },
   "repository": {
     "type": "git",
@@ -45,5 +73,5 @@
   "bugs": {
     "url": "https://github.com/ohtomi/react-handsontable-hoc/issues"
   },
-  "homepage": "https://github.com/ohtomi/react-handsontable-hoc#readme",
+  "homepage": "https://github.com/ohtomi/react-handsontable-hoc#readme"
 }
