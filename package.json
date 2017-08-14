@@ -22,8 +22,7 @@
   },
   "peerDependencies": {
     "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-handsontable": "^0.3.1"
+    "react-dom": "^15.6.1"
   },
   "dependencies": {},
   "devDependencies": {
@@ -36,6 +35,7 @@
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
     "chokidar-cli": "^1.2.0",
+    "cross-env": "^5.0.5",
     "enzyme": "^2.9.1",
     "eslint": "^4.4.1",
     "eslint-import-resolver-node": "^0.3.1",
@@ -48,6 +48,7 @@
     "eslint-plugin-security": "^1.4.0",
     "flow-bin": "^0.52.0",
     "flow-typed": "^2.1.5",
+    "jsdom": "^11.1.0",
     "npm-run-all": "^4.0.2",
     "nyc": "^11.1.0",
     "react": "^15.6.1",
@@ -59,6 +60,18 @@
     "tap-notify": "^1.0.0",
     "webpack": "^3.5.4",
     "webpack-dev-server": "^2.7.1"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.test.js"
+    ],
+    "source": [
+      "src/**/*.{js,jsx}"
+    ],
+    "require": [
+      "./test/setup.js"
+    ],
+    "babel": "inherit"
   },
   "repository": {
     "type": "git",
