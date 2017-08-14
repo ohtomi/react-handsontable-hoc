@@ -79,7 +79,10 @@
   },
   "keywords": [
     "react",
-    "handsontable"
+    "handsontable",
+    "sort-columns",
+    "move-columns",
+    "hide-columns"
   ],
   "author": "Kenichi Ohtomi",
   "license": "MIT",
