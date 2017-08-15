@@ -105,7 +105,7 @@ export default class HotTableContainer extends React.Component {
             }
 
             const rangeLength = to < target ? target : to + 1;
-            const range = Array.from({length: rangeLength}, (v, k) => k);
+            const range = Array.from({length: rangeLength}, (v: any, k: number): number => k);
 
             if (to < target) {
                 range.splice(target, 0, ...range.slice(from, to + 1));
@@ -116,8 +116,8 @@ export default class HotTableContainer extends React.Component {
             this.debug('range', range.join(', '));
 
             let newSortIndex = columnSorting.column;
-            range.forEach((column, index) => {
-                if (columnSorting.column === column) {
+            range.forEach((column: number, index: number) => {
+                if (column === columnSorting.column) {
                     newSortIndex = index;
                 }
             });
@@ -170,9 +170,9 @@ export default class HotTableContainer extends React.Component {
                 const elementOffset = this.props.rowHeaders ? 2 : 1;
 
                 const countCols = this.hot.hotInstance.countCols();
-                const range = Array.from({length: countCols}, (v, k) => k);
+                const range = Array.from({length: countCols}, (v: any, k: number): number => k);
 
-                range.forEach(column => {
+                range.forEach((column: number) => {
 
                     const hidden = this.state.hiddenColumns.some((hidden: number): boolean => {
                         const visual = this.hot.hotInstance.toVisualColumn(hidden);
@@ -219,7 +219,7 @@ export default class HotTableContainer extends React.Component {
             /*
              * overwrite plugin's getColumnsWidth() to prevent from adding hidden columns' width into return value
              */
-            const fn = (from, to) => {
+            const fn = (from: number, to: number): number => {
                 let width = 0;
 
                 for (let i = from; i < to; i++) {
