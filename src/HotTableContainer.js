@@ -264,6 +264,12 @@ export default class HotTableContainer extends React.Component {
         }
     }
 
+    componentWillReceiveProps(nextProps: propsType) {
+        const hiddenColumns = nextProps.hiddenColumns || this.state.hiddenColumns;
+        this.setState({hiddenColumns: hiddenColumns});
+        this.hot.hotInstance.updateSettings({});
+    }
+
     render() {
         const props = Object.assign({}, this.props);
 
