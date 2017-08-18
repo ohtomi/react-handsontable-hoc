@@ -1,6 +1,6 @@
 {
   "name": "@ohtomi/react-handsontable-hoc",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A higher order component for react-handsontable",
   "main": "dist/index.js",
   "files": [
@@ -48,6 +48,7 @@
     "eslint-plugin-security": "^1.4.0",
     "flow-bin": "^0.52.0",
     "flow-typed": "^2.1.5",
+    "handsontable": "^0.33.0",
     "jsdom": "^11.1.0",
     "npm-run-all": "^4.0.2",
     "nyc": "^11.1.0",

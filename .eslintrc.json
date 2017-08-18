@@ -38,6 +38,9 @@
           ".jsx"
         ]
       }
-    }
+    },
+    "import/ignore": [
+      "node_modules/handsontable"
+    ]
   }
 }

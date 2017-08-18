@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import Handsontable from 'handsontable';
 import HotTable from 'react-handsontable';
 
 
@@ -34,7 +35,7 @@ export default class HotTableContainer extends React.Component {
     props: propsType;
     state: stateType;
 
-    hot: any;
+    hot: { hotInstance: Handsontable };
 
     constructor(props: propsType) {
         super(props);
@@ -48,8 +49,6 @@ export default class HotTableContainer extends React.Component {
             columnMapping: columnMapping,
             hiddenColumns: hiddenColumns
         };
-
-        this.hot = null;
     }
 
     afterColumnSort(column: number, sortOrder?: boolean) {
@@ -86,7 +85,7 @@ export default class HotTableContainer extends React.Component {
     beforeColumnMove(columns: Array<number>, target: number) {
         // columns are an array of visual column indexes.
         // target is visual column index.
-        this.debug('before column move', columns.join(', '), target);
+        this.debug('before column move', `[${columns.join(', ')}]`, target);
 
         try {
             if (!this.state.columnSorting) {
@@ -113,7 +112,7 @@ export default class HotTableContainer extends React.Component {
             } else if (from > target) {
                 range.splice(target, 0, ...range.splice(from, to + 1 - from));
             }
-            this.debug('range', range.join(', '));
+            this.debug('range', `[${range.join(', ')}]`);
 
             let newSortIndex = columnSorting.column;
             range.forEach((column: number, index: number) => {
@@ -139,7 +138,7 @@ export default class HotTableContainer extends React.Component {
     afterColumnMove(columns: Array<number>, target: number) {
         // columns are an array of physical column indexes. document bug?
         // target is visual column index.
-        this.debug('after column move', columns.join(', '), target);
+        this.debug('after column move', `[${columns.join(', ')}]`, target);
 
         try {
             this.hot.hotInstance.updateSettings({});
@@ -166,7 +165,7 @@ export default class HotTableContainer extends React.Component {
     afterUpdateSettings(settings: any) {
         try {
             requestAnimationFrame(() => {
-                const tables = document.querySelectorAll('.htCore');
+                const tables = this.hot.hotInstance.rootElement.querySelectorAll('.htCore');
                 const elementOffset = this.props.rowHeaders ? 2 : 1;
 
                 const countCols = this.hot.hotInstance.countCols();
@@ -288,5 +287,9 @@ export default class HotTableContainer extends React.Component {
             return;
         }
         this.props.logger(...messages);
+    }
+
+    hotInstance(): Handsontable {
+        return this.hot.hotInstance;
     }
 }
