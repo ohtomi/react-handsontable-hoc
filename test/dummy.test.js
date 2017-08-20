@@ -2,7 +2,7 @@ import test from 'ava';
 import React from 'react';
 import {shallow} from 'enzyme';
 
-import {HotTableContainer} from '../dist/';
+import {HotTableContainer, RowFilter, Expressions} from '../dist/';
 
 
 const data = [
@@ -32,4 +32,36 @@ test('table exist', t => {
             manualColumnResize={true}/>
     );
     t.truthy(wrapper.find('.htCore'));
+});
+
+test('filter by values', t => {
+    const filter = new RowFilter([
+        {
+            physical: 1,
+            expression: Expressions.get({symbol: 'by_values', props: ['ford', 'volvo']})
+        }
+    ]);
+
+    const filtered = filter.evaluate(data, columns);
+
+    t.is(2, filtered.length);
+    t.is(1, filtered[0].id);
+    t.is(2, filtered[1].id);
+});
+
+test('filter by function', t => {
+    const filter = new RowFilter([
+        {
+            physical: 1,
+            expression: Expressions.byFunction((value: any): boolean => {
+                return value === 'ford' || value === 'volvo';
+            })
+        }
+    ]);
+
+    const filtered = filter.evaluate(data, columns);
+
+    t.is(2, filtered.length);
+    t.is(1, filtered[0].id);
+    t.is(2, filtered[1].id);
 });

@@ -2,7 +2,12 @@
 
 import HotTableContainer from './HotTableContainer';
 
+import RowFilter from './RowFilter';
+import * as Expressions from './Expression';
+
 
 module.exports = {
-    HotTableContainer
+    HotTableContainer,
+    RowFilter,
+    Expressions
 };
