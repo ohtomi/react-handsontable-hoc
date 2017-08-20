@@ -11,7 +11,7 @@ export class Expression {
     }
 
     evaluate(value: any): boolean {
-        return true;
+        return value;
     }
 }
 
@@ -28,7 +28,7 @@ export class FilterByValues extends Expression {
 
 export class FilterByFunction extends Expression {
 
-    constructor(symbol: string, props: Array<any>) {
+    constructor(symbol: string, props: (value: any) => boolean) {
         super(symbol, props);
     }
 
