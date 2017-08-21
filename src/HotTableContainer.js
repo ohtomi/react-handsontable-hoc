@@ -4,6 +4,9 @@ import React from 'react';
 import Handsontable from 'handsontable';
 import HotTable from 'react-handsontable';
 
+import RowFilter from "./RowFilter";
+import type {PhysicalToExpression} from "./RowFilter";
+
 
 type columnSorting = {
     column: number,
@@ -13,18 +16,24 @@ type columnSorting = {
 type propsType = {
     mode?: 'production' | 'debug' | '',
     logger?: (messages: Iterator<any>) => void,
+    data: Array<any>,
+    columns: Array<any>,
     rowHeaders?: boolean,
     columnSorting?: columnSorting | null,
     columnMapping?: Array<number>,
     hiddenColumns?: Array<number>,
+    afterGetColHeader: (column: number, th: HTMLElement) => void,
     afterColumnSort?: (column: number, sortOrder?: boolean) => void,
     beforeColumnMove?: (columns: Array<number>, target: number) => void,
     afterColumnMove?: (columns: Array<number>, target: number) => void,
     afterColumnResize?: (column: number, width: number, isDoubleClick: boolean) => void,
-    afterUpdateSettings?: (settings: any) => void
+    afterUpdateSettings?: (settings: any) => void,
+    rowFilter?: RowFilter,
+    onClickRowFilterIndicator?: (ev: MouseEvent, column: number) => void
 };
 
 type stateType = {
+    data: Array<any>,
     columnSorting: columnSorting,
     columnMapping: Array<number>,
     hiddenColumns: Array<number>
@@ -40,15 +49,21 @@ export default class HotTableContainer extends React.Component {
     constructor(props: propsType) {
         super(props);
 
+        const data = props.rowFilter ? props.rowFilter.evaluate(props.data, props.columns) : props.data;
         const columnSorting = props.columnSorting || false;
         const columnMapping = props.columnMapping || [];
         const hiddenColumns = props.hiddenColumns || [];
 
         this.state = {
+            data: data,
             columnSorting: columnSorting,
             columnMapping: columnMapping,
             hiddenColumns: hiddenColumns
         };
+    }
+
+    afterGetColHeader(/*column: number, thEl: HTMLElement*/) {
+        // column is visual column index.
     }
 
     afterColumnSort(column: number, sortOrder?: boolean) {
@@ -192,6 +207,7 @@ export default class HotTableContainer extends React.Component {
                             } else {
                                 cell.classList.remove('hidden');
                             }
+                            this.addRowFilterIndicator(column, cell, hidden);
                         });
                         table.querySelectorAll(`td:nth-child(${column + elementOffset})`).forEach((cell: HTMLElement) => {
                             if (hidden) {
@@ -206,6 +222,41 @@ export default class HotTableContainer extends React.Component {
         } finally {
             if (this.props.afterUpdateSettings) {
                 this.props.afterUpdateSettings(settings);
+            }
+        }
+    }
+
+    addRowFilterIndicator(column: number, thEl: HTMLElement, hidden: boolean) {
+        try {
+            if (thEl.firstChild && thEl.firstChild.lastChild && thEl.firstChild.lastChild.nodeName.toLowerCase() === 'button') {
+                thEl.firstChild.removeChild(thEl.firstChild.lastChild);
+            }
+
+            if (!this.props.rowFilter || !this.props.onClickRowFilterIndicator || hidden) {
+                return;
+            }
+
+            const physical = this.hot.hotInstance.toPhysicalColumn(column);
+            const active = this.props.rowFilter && this.props.rowFilter.expressions.some((expression: PhysicalToExpression): boolean => {
+                return expression.physical === physical;
+            });
+
+            const buttonEl = document.createElement('button');
+            buttonEl.innerHTML = '\u25BC';
+            buttonEl.className = `changeType ${active ? 'active' : ''}`;
+            buttonEl.addEventListener('click', (ev: MouseEvent) => {
+                if (this.props.onClickRowFilterIndicator) {
+                    this.props.onClickRowFilterIndicator(ev, column);
+                }
+            });
+
+            if (thEl.firstChild) {
+                thEl.firstChild.appendChild(buttonEl);
+                thEl.style.whiteSpace = 'normal';
+            }
+        } finally {
+            if (this.props.afterGetColHeader) {
+                this.props.afterGetColHeader(column, thEl);
             }
         }
     }
@@ -265,8 +316,14 @@ export default class HotTableContainer extends React.Component {
     }
 
     componentWillReceiveProps(nextProps: propsType) {
-        const hiddenColumns = nextProps.hiddenColumns || this.state.hiddenColumns;
-        this.setState({hiddenColumns: hiddenColumns});
+        const newState = {};
+        if (nextProps.data !== this.props.data || nextProps.rowFilter !== this.props.rowFilter) {
+            newState.data = nextProps.rowFilter ? nextProps.rowFilter.evaluate(nextProps.data, nextProps.columns) : nextProps.data;
+        }
+        if (nextProps.hiddenColumns !== this.props.hiddenColumns) {
+            newState.hiddenColumns = nextProps.hiddenColumns;
+        }
+        this.setState(newState);
         this.hot.hotInstance.updateSettings({});
     }
 
@@ -276,7 +333,9 @@ export default class HotTableContainer extends React.Component {
         return (
             <HotTable ref={hot => this.hot = hot}
                       {...props}
+                      data={this.state.data}
                       columnSorting={this.state.columnSorting}
+                      afterGetColHeader={this.afterGetColHeader.bind(this)}
                       afterColumnSort={this.afterColumnSort.bind(this)}
                       beforeColumnMove={this.beforeColumnMove.bind(this)}
                       afterColumnMove={this.afterColumnMove.bind(this)}

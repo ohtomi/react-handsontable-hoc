@@ -9,7 +9,7 @@ type Column = {
     type: 'numeric' | 'text'
 }
 
-type PhysicalToExpression = {
+export type PhysicalToExpression = {
     physical: number,
     expression: Expression
 };
