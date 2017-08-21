@@ -31,8 +31,8 @@ export default class RowFilter {
                 let value: any;
                 if (typeof column.data === 'string') {
                     value = record[column.data];
-                } else if (typeof column.data === ColumnDataFunction) {
-                    value = column.data(record);
+                } else if (typeof column.data === 'function') {
+                    value = (column.data: ColumnDataFunction)(record);
                 } else {
                     return false;
                 }

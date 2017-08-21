@@ -38,37 +38,49 @@ export class FilterByFunction extends Expression {
 }
 
 
-const subclasses = [
-    {symbol: 'by_values', ctor: FilterByValues},
-    {symbol: 'by_function', ctor: FilterByFunction}
+type FactoryFunction = (props: any) => Expression;
+
+const subclasses: Array<{ symbol: string, factory: FactoryFunction }> = [
+    {symbol: 'by_values', factory: byValues},
+    {symbol: 'by_function', factory: byFunction}
 ];
 
-export function get(obj: { symbol: string, props: any }): ?Expression {
-    const subclass = subclasses.find((subclass: { symbol: string, ctor: Expression }): boolean => {
-        return subclass.symbol === obj.symbol;
+
+const factoryFromSymbol = (symbol: string): FactoryFunction => {
+    const subclass = subclasses.find((subclass: { symbol: string, factory: FactoryFunction }): boolean => {
+        return subclass.symbol === symbol;
     });
 
     if (!subclass) {
-        return null;
+        throw new Error(`no found Expression factory by ${symbol}`);
     }
 
-    return new subclass.ctor(obj.symbol, obj.props);
+    return subclass.factory;
+};
+
+export function get(obj: { symbol: string, props: any }): Expression {
+    const factory = factoryFromSymbol(obj.symbol);
+    return factory(obj.props);
 }
 
-const symbolFromConstructor = (ctor: Expression): string => {
-    const subclass = subclasses.find((subclass: { symbol: string, ctor: Expression }): boolean => {
-        return subclass.ctor === ctor;
+const symbolFromFactory = (factory: (props: any) => Expression): string => {
+    const subclass = subclasses.find((subclass: { symbol: string, factory: FactoryFunction }): boolean => {
+        return subclass.factory === factory;
     });
+
+    if (!subclass) {
+        throw new Error(`no found Expression symbol by ${factory.name}`);
+    }
 
     return subclass.symbol;
 };
 
 export function byValues(values: Array<any>): FilterByValues {
-    const symbol = symbolFromConstructor(FilterByValues);
+    const symbol = symbolFromFactory(byValues);
     return new FilterByValues(symbol, values);
 }
 
 export function byFunction(func: (value: any) => boolean): FilterByFunction {
-    const symbol = symbolFromConstructor(FilterByFunction);
+    const symbol = symbolFromFactory(byFunction);
     return new FilterByFunction(symbol, func);
 }
