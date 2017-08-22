@@ -44,6 +44,7 @@ export default class HotTableContainer extends React.Component {
     props: propsType;
     state: stateType;
 
+    initialized: boolean;
     hot: { hotInstance: Handsontable };
 
     constructor(props: propsType) {
@@ -144,7 +145,7 @@ export default class HotTableContainer extends React.Component {
                 }
             });
         } finally {
-            if (this.props.beforeColumnMove) {
+            if (this.props.beforeColumnMove && this.initialized) {
                 this.props.beforeColumnMove(columns, target);
             }
         }
@@ -158,7 +159,7 @@ export default class HotTableContainer extends React.Component {
         try {
             this.hot.hotInstance.updateSettings({});
         } finally {
-            if (this.props.afterColumnMove) {
+            if (this.props.afterColumnMove && this.initialized) {
                 this.props.afterColumnMove(columns, target);
             }
         }
@@ -312,6 +313,8 @@ export default class HotTableContainer extends React.Component {
             }).forEach((element: { physical: number, visual: number }) => {
                 plugin.moveColumn(element.physical, element.visual + 1);
             });
+
+            this.initialized = true;
         }
     }
 
