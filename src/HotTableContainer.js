@@ -50,6 +50,10 @@ export default class HotTableContainer extends React.Component {
     constructor(props: propsType) {
         super(props);
 
+        if (props.rowFilter) {
+            props.rowFilter.reevaluator = this.evaluateRowFilter.bind(this, props.data, props.columns);
+        }
+
         const data = props.rowFilter ? props.rowFilter.evaluate(props.data, props.columns) : props.data;
         const columnSorting = props.columnSorting || false;
         const columnMapping = props.columnMapping || [];
@@ -61,6 +65,10 @@ export default class HotTableContainer extends React.Component {
             columnMapping: columnMapping,
             hiddenColumns: hiddenColumns
         };
+    }
+
+    evaluateRowFilter(data: Array<any>, columns: Array<any>, rowFilter: RowFilter) {
+        this.setState({data: rowFilter.evaluate(data, columns)});
     }
 
     afterGetColHeader(/*column: number, thEl: HTMLElement*/) {
@@ -319,6 +327,10 @@ export default class HotTableContainer extends React.Component {
     }
 
     componentWillReceiveProps(nextProps: propsType) {
+        if (nextProps.rowFilter) {
+            nextProps.rowFilter.reevaluator = this.evaluateRowFilter.bind(this, nextProps.data, nextProps.columns);
+        }
+
         const newState = {};
         if (nextProps.data !== this.props.data || nextProps.rowFilter !== this.props.rowFilter) {
             newState.data = nextProps.rowFilter ? nextProps.rowFilter.evaluate(nextProps.data, nextProps.columns) : nextProps.data;

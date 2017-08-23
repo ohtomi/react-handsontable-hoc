@@ -14,9 +14,12 @@ export type PhysicalToExpression = {
     expression: Expression
 };
 
+export type Reevaluator = () => void;
+
 export default class RowFilter {
 
     expressions: Array<PhysicalToExpression>;
+    reevaluator: ?Reevaluator;
 
     constructor(expressions: Array<PhysicalToExpression>) {
         this.expressions = expressions;
@@ -40,5 +43,11 @@ export default class RowFilter {
                 return expression.evaluate(value);
             });
         });
+    }
+
+    reevaluate() {
+        if (this.reevaluator) {
+            this.reevaluator(this);
+        }
     }
 }
