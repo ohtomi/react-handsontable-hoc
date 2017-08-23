@@ -14,7 +14,7 @@ export type PhysicalToExpression = {
     expression: Expression
 };
 
-export type Reevaluator = () => void;
+export type Reevaluator = (filter: RowFilter) => void;
 
 export default class RowFilter {
 

@@ -50,8 +50,9 @@ export default class HotTableContainer extends React.Component {
     constructor(props: propsType) {
         super(props);
 
+        const reevaluator = this.evaluateRowFilter.bind(this, props.data, props.columns);
         if (props.rowFilter) {
-            props.rowFilter.reevaluator = this.evaluateRowFilter.bind(this, props.data, props.columns);
+            props.rowFilter.reevaluator = reevaluator;
         }
 
         const data = props.rowFilter ? props.rowFilter.evaluate(props.data, props.columns) : props.data;
@@ -327,8 +328,9 @@ export default class HotTableContainer extends React.Component {
     }
 
     componentWillReceiveProps(nextProps: propsType) {
+        const reevaluator = this.evaluateRowFilter.bind(this, nextProps.data, nextProps.columns);
         if (nextProps.rowFilter) {
-            nextProps.rowFilter.reevaluator = this.evaluateRowFilter.bind(this, nextProps.data, nextProps.columns);
+            nextProps.rowFilter.reevaluator = reevaluator;
         }
 
         const newState = {};
