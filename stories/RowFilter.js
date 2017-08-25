@@ -65,7 +65,8 @@ storiesOf('Row Filter', module)
                     columnSorting={true} sortIndicator={true}
                     manualColumnMove={true}
                     manualColumnResize={true}
-                    rowFilter={filter}/>
+                    rowFilter={filter}
+                    onClickRowFilterIndicator={action('onClickRowFilterIndicator')}/>
                 <label>NAME: <input type="text" onChange={onChange} autoFocus={true}/></label>
             </div>
         );
