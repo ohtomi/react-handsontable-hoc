@@ -272,6 +272,68 @@ export default class HotTableContainer extends React.Component {
     }
 
     componentDidMount() {
+        this.initializeHotTable();
+    }
+
+    componentWillReceiveProps(nextProps: propsType) {
+        const reevaluator = this.evaluateRowFilter.bind(this, nextProps.data, nextProps.columns);
+        if (nextProps.rowFilter) {
+            nextProps.rowFilter.reevaluator = reevaluator;
+        }
+
+        const newState = {};
+        if (nextProps.data !== this.props.data || nextProps.rowFilter !== this.props.rowFilter) {
+            newState.data = nextProps.rowFilter ? nextProps.rowFilter.evaluate(nextProps.data, nextProps.columns) : nextProps.data;
+        }
+        if (nextProps.hiddenColumns !== this.props.hiddenColumns) {
+            newState.hiddenColumns = nextProps.hiddenColumns;
+        }
+        this.setState(newState);
+        this.hot.hotInstance.updateSettings({});
+    }
+
+    componentDidUpdate() {
+        if (!this.initialized) {
+            this.initializeHotTable();
+        }
+    }
+
+    render() {
+        const props = Object.assign({}, this.props);
+
+        return (
+            <HotTable ref={hot => this.hot = hot}
+                      {...props}
+                      data={this.state.data}
+                      columnSorting={this.state.columnSorting}
+                      afterGetColHeader={this.afterGetColHeader.bind(this)}
+                      afterColumnSort={this.afterColumnSort.bind(this)}
+                      beforeColumnMove={this.beforeColumnMove.bind(this)}
+                      afterColumnMove={this.afterColumnMove.bind(this)}
+                      afterColumnResize={this.afterColumnResize.bind(this)}
+                      afterUpdateSettings={this.afterUpdateSettings.bind(this)}/>
+        );
+    }
+
+    debug(...messages: any) {
+        if (this.props.mode !== 'debug') {
+            return;
+        }
+        if (!this.props.logger) {
+            return;
+        }
+        this.props.logger(...messages);
+    }
+
+    hotInstance(): Handsontable {
+        return this.hot.hotInstance;
+    }
+
+    initializeHotTable() {
+        if (!this.hot || !this.hot.hotInstance) {
+            return;
+        }
+
         const plugin = this.hot.hotInstance.getPlugin('ManualColumnMove');
         this.debug('plugin?', !!plugin);
 
@@ -325,53 +387,5 @@ export default class HotTableContainer extends React.Component {
 
             this.initialized = true;
         }
-    }
-
-    componentWillReceiveProps(nextProps: propsType) {
-        const reevaluator = this.evaluateRowFilter.bind(this, nextProps.data, nextProps.columns);
-        if (nextProps.rowFilter) {
-            nextProps.rowFilter.reevaluator = reevaluator;
-        }
-
-        const newState = {};
-        if (nextProps.data !== this.props.data || nextProps.rowFilter !== this.props.rowFilter) {
-            newState.data = nextProps.rowFilter ? nextProps.rowFilter.evaluate(nextProps.data, nextProps.columns) : nextProps.data;
-        }
-        if (nextProps.hiddenColumns !== this.props.hiddenColumns) {
-            newState.hiddenColumns = nextProps.hiddenColumns;
-        }
-        this.setState(newState);
-        this.hot.hotInstance.updateSettings({});
-    }
-
-    render() {
-        const props = Object.assign({}, this.props);
-
-        return (
-            <HotTable ref={hot => this.hot = hot}
-                      {...props}
-                      data={this.state.data}
-                      columnSorting={this.state.columnSorting}
-                      afterGetColHeader={this.afterGetColHeader.bind(this)}
-                      afterColumnSort={this.afterColumnSort.bind(this)}
-                      beforeColumnMove={this.beforeColumnMove.bind(this)}
-                      afterColumnMove={this.afterColumnMove.bind(this)}
-                      afterColumnResize={this.afterColumnResize.bind(this)}
-                      afterUpdateSettings={this.afterUpdateSettings.bind(this)}/>
-        );
-    }
-
-    debug(...messages: any) {
-        if (this.props.mode !== 'debug') {
-            return;
-        }
-        if (!this.props.logger) {
-            return;
-        }
-        this.props.logger(...messages);
-    }
-
-    hotInstance(): Handsontable {
-        return this.hot.hotInstance;
     }
 }
