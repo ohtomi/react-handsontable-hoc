@@ -78,4 +78,22 @@ storiesOf('Basic', module)
                 manualColumnMove={true}
                 manualColumnResize={true}/>
         );
+    })
+    .add('with row header', () => {
+        const columnSorting = {
+            column: 4,
+            sortOrder: false
+        };
+        const columnMapping = [0, 2, 3, 4, 1];
+        const hiddenColumns = [3];
+
+        return (
+            <HotTableContainer
+                mode="debug" logger={action('debug')} columnMapping={columnMapping} hiddenColumns={hiddenColumns}
+                data={data} columns={columns} colHeaders={colHeaders} rowHeaders={true}
+                width="800" height="300"
+                columnSorting={columnSorting} sortIndicator={true}
+                manualColumnMove={true}
+                manualColumnResize={true}/>
+        );
     });
