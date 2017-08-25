@@ -4,22 +4,18 @@ import React from 'react';
 import Handsontable from 'handsontable';
 import HotTable from 'react-handsontable';
 
+import type {Column, ColumnSorting, ColumnSortingObject} from "./HandsontableTypes";
+import type {PhysicalToExpression, Reevaluator} from "./RowFilter";
 import RowFilter from "./RowFilter";
-import type {PhysicalToExpression} from "./RowFilter";
 
-
-type columnSorting = {
-    column: number,
-    sortOrder: boolean | null
-} | boolean;
 
 type propsType = {
     mode?: 'production' | 'debug' | '',
     logger?: (messages: Iterator<any>) => void,
     data: Array<any>,
-    columns: Array<any>,
+    columns: Array<Column>,
     rowHeaders?: boolean,
-    columnSorting?: columnSorting | null,
+    columnSorting?: ColumnSorting | null,
     columnMapping?: Array<number>,
     hiddenColumns?: Array<number>,
     afterGetColHeader: (column: number, th: HTMLElement) => void,
@@ -34,7 +30,7 @@ type propsType = {
 
 type stateType = {
     data: Array<any>,
-    columnSorting: columnSorting,
+    columnSorting: ColumnSorting,
     columnMapping: Array<number>,
     hiddenColumns: Array<number>
 };
@@ -50,7 +46,7 @@ export default class HotTableContainer extends React.Component {
     constructor(props: propsType) {
         super(props);
 
-        const reevaluator = this.evaluateRowFilter.bind(this, props.data, props.columns);
+        const reevaluator: Reevaluator = this.evaluateRowFilter.bind(this, props.data, props.columns);
         if (props.rowFilter) {
             props.rowFilter.reevaluator = reevaluator;
         }
@@ -68,7 +64,7 @@ export default class HotTableContainer extends React.Component {
         };
     }
 
-    evaluateRowFilter(data: Array<any>, columns: Array<any>, rowFilter: RowFilter) {
+    evaluateRowFilter(data: Array<any>, columns: Array<Column>, rowFilter: RowFilter) {
         this.setState({data: rowFilter.evaluate(data, columns)});
     }
 
@@ -117,42 +113,44 @@ export default class HotTableContainer extends React.Component {
                 return;
             }
 
-            const columnSorting: columnSorting = this.state.columnSorting;
-            const from = columns[0];
-            const to = columns[columns.length - 1];
+            if (typeof this.state.columnSorting === 'object') {
+                const columnSorting: ColumnSortingObject = this.state.columnSorting;
+                const from = columns[0];
+                const to = columns[columns.length - 1];
 
-            if (columnSorting.column < from && columnSorting.column < target) {
-                return;
-            }
-            if (columnSorting.column > to && columnSorting.column > target) {
-                return;
-            }
-
-            const rangeLength = to < target ? target : to + 1;
-            const range = Array.from({length: rangeLength}, (v: any, k: number): number => k);
-
-            if (to < target) {
-                range.splice(target, 0, ...range.slice(from, to + 1));
-                range.splice(from, to + 1 - from);
-            } else if (from > target) {
-                range.splice(target, 0, ...range.splice(from, to + 1 - from));
-            }
-            this.debug('range', `[${range.join(', ')}]`);
-
-            let newSortIndex = columnSorting.column;
-            range.forEach((column: number, index: number) => {
-                if (column === columnSorting.column) {
-                    newSortIndex = index;
+                if (columnSorting.column < from && columnSorting.column < target) {
+                    return;
                 }
-            });
-            this.debug('sort index', `${columnSorting.column} -> ${newSortIndex}`);
-
-            this.setState({
-                columnSorting: {
-                    column: newSortIndex,
-                    sortOrder: columnSorting.sortOrder
+                if (columnSorting.column > to && columnSorting.column > target) {
+                    return;
                 }
-            });
+
+                const rangeLength = to < target ? target : to + 1;
+                const range = Array.from({length: rangeLength}, (v: any, k: number): number => k);
+
+                if (to < target) {
+                    range.splice(target, 0, ...range.slice(from, to + 1));
+                    range.splice(from, to + 1 - from);
+                } else if (from > target) {
+                    range.splice(target, 0, ...range.splice(from, to + 1 - from));
+                }
+                this.debug('range', `[${range.join(', ')}]`);
+
+                let newSortIndex = columnSorting.column;
+                range.forEach((column: number, index: number) => {
+                    if (column === columnSorting.column) {
+                        newSortIndex = index;
+                    }
+                });
+                this.debug('sort index', `${columnSorting.column} -> ${newSortIndex}`);
+
+                this.setState({
+                    columnSorting: {
+                        column: newSortIndex,
+                        sortOrder: columnSorting.sortOrder
+                    }
+                });
+            }
         } finally {
             if (this.props.beforeColumnMove && this.initialized) {
                 this.props.beforeColumnMove(columns, target);
@@ -276,7 +274,7 @@ export default class HotTableContainer extends React.Component {
     }
 
     componentWillReceiveProps(nextProps: propsType) {
-        const reevaluator = this.evaluateRowFilter.bind(this, nextProps.data, nextProps.columns);
+        const reevaluator: Reevaluator = this.evaluateRowFilter.bind(this, nextProps.data, nextProps.columns);
         if (nextProps.rowFilter) {
             nextProps.rowFilter.reevaluator = reevaluator;
         }

@@ -1,13 +1,7 @@
 // @flow
 
 import {Expression} from "./Expression";
-
-type ColumnDataFunction = (data: any) => any;
-
-type Column = {
-    data: string | ColumnDataFunction,
-    type: 'numeric' | 'text'
-}
+import type {Column, ColumnDataFunction} from "./HandsontableTypes";
 
 export type PhysicalToExpression = {
     physical: number,
