@@ -14,7 +14,7 @@ render() {
         {'id': 1, 'name': 'ford', 'year': 2018, 'volume': 1000, 'good': true},
         {'id': 2, 'name': 'volvo', 'year': 2017, 'volume': 1000, 'good': false},
         {'id': 3, 'name': 'toyota', 'year': 2016, 'volume': 1000, 'good': true},
-        {'id': 4, 'name': 'honda', 'year': 2015, 'volume': 1000, 'good': true},
+        {'id': 4, 'name': 'honda', 'year': 2015, 'volume': 1000, 'good': true}
     ];
     
     const columns = [
@@ -39,6 +39,17 @@ render() {
         sortOrder: false
     };
 
+    // filter by NAME
+    const filter = new RowFilter([
+        {
+            physical: 1,
+            expression: Expressions.get({
+                symbol: 'by_values',
+                props: ['ford', 'volvo']
+            })
+        }
+    ]);
+
     return (
         <HotTableContainer
             width="800" height="300"
@@ -46,7 +57,8 @@ render() {
             columnMapping={columnMapping} hiddenColumns={hiddenColumns}
             columnSorting={columnSorting} sortIndicator={true}
             manualColumnMove={true}
-            manualColumnResize={true}/>
+            manualColumnResize={true}
+            rowFilter={filter}/>
     );
 }
 ```
