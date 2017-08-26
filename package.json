@@ -83,7 +83,8 @@
     "handsontable",
     "sort-columns",
     "move-columns",
-    "hide-columns"
+    "hide-columns",
+    "filter-rows"
   ],
   "author": "Kenichi Ohtomi",
   "license": "MIT",
