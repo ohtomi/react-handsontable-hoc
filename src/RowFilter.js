@@ -19,9 +19,13 @@ export default class RowFilter {
         this.expressions = expressions;
     }
 
-    evaluate(data: Array<any>, columns: Array<Column>): Array<any> {
+    evaluate(data: Array<any>, columns: Array<Column>, skip: Array<number> = []): Array<any> {
         return data.filter((record: any): boolean => {
             return this.expressions.every((element: PhysicalToExpression): boolean => {
+                if (skip.some((skip: number): boolean => skip === element.physical)) {
+                    return true;
+                }
+
                 const column = columns[element.physical];
                 const expression = element.expression;
 

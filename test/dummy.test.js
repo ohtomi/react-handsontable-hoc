@@ -9,7 +9,7 @@ const data = [
     {'id': 1, 'name': 'ford', 'year': 2018, 'volume': 1000, 'good': true},
     {'id': 2, 'name': 'volvo', 'year': 2017, 'volume': 1000, 'good': false},
     {'id': 3, 'name': 'toyota', 'year': 2016, 'volume': 1000, 'good': true},
-    {'id': 4, 'name': 'honda', 'year': 2015, 'volume': 1000, 'good': true},
+    {'id': 4, 'name': 'honda', 'year': 2015, 'volume': 1000, 'good': true}
 ];
 
 const columns = [
@@ -64,4 +64,34 @@ test('filter by function', t => {
     t.is(2, filtered.length);
     t.is(1, filtered[0].id);
     t.is(2, filtered[1].id);
+});
+
+test('skip filtering', t => {
+    const filter = new RowFilter([
+        {
+            physical: 0,
+            expression: Expressions.byFunction((value: any): boolean => {
+                return value === 1;
+            })
+        }, {
+            physical: 1,
+            expression: Expressions.byFunction((value: any): boolean => {
+                return value === 'ford' || value === 'volvo';
+            })
+        }
+    ]);
+
+    {
+        const filtered = filter.evaluate(data, columns);
+
+        t.is(1, filtered.length);
+        t.is(1, filtered[0].id);
+    }
+    {
+        const filtered = filter.evaluate(data, columns, [0]);
+
+        t.is(2, filtered.length);
+        t.is(1, filtered[0].id);
+        t.is(2, filtered[1].id);
+    }
 });
