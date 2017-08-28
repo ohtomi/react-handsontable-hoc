@@ -6,10 +6,18 @@ import {HotTableContainer, RowFilter, Expressions} from '../dist/';
 
 
 const data = [
-    {'id': 1, 'name': 'ford', 'year': 2018, 'volume': 1000, 'good': true},
-    {'id': 2, 'name': 'volvo', 'year': 2017, 'volume': 1000, 'good': false},
-    {'id': 3, 'name': 'toyota', 'year': 2016, 'volume': 1000, 'good': true},
-    {'id': 4, 'name': 'honda', 'year': 2015, 'volume': 1000, 'good': true}
+    {'id': 11, 'name': 'ford', 'year': 2015, 'volume': 1000, 'processed': true},
+    {'id': 12, 'name': 'ford', 'year': 2016, 'volume': 1000, 'processed': true},
+    {'id': 13, 'name': 'ford', 'year': 2017, 'volume': 1000, 'processed': true},
+    {'id': 14, 'name': 'ford', 'year': 2018, 'volume': 1000, 'processed': false},
+    {'id': 21, 'name': 'volvo', 'year': 2015, 'volume': 1000, 'processed': true},
+    {'id': 22, 'name': 'volvo', 'year': 2016, 'volume': 1000, 'processed': true},
+    {'id': 23, 'name': 'volvo', 'year': 2017, 'volume': 1000, 'processed': true},
+    {'id': 24, 'name': 'volvo', 'year': 2017, 'volume': 1000, 'processed': false},
+    {'id': 31, 'name': 'toyota', 'year': 2016, 'volume': 1000, 'processed': true},
+    {'id': 32, 'name': 'toyota', 'year': 2017, 'volume': 1000, 'processed': true},
+    {'id': 33, 'name': 'toyota', 'year': 2018, 'volume': 1000, 'processed': true},
+    {'id': 41, 'name': 'honda', 'year': 2015, 'volume': 1000, 'processed': true}
 ];
 
 const columns = [
@@ -17,10 +25,10 @@ const columns = [
     {data: 'name', type: 'text', width: 150, readOnly: true},
     {data: 'year', type: 'numeric', width: 150, readOnly: true},
     {data: 'volume', type: 'numeric', width: 150, readOnly: true},
-    {data: data => data.good ? 'GOOD' : 'BAD', type: 'text', width: 150, readOnly: true}
+    {data: data => data.processed ? 'Yes' : 'No', type: 'text', width: 150, readOnly: true}
 ];
 
-const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'GOOD/BAD'];
+const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?'];
 
 test('table exist', t => {
     const wrapper = shallow(
@@ -44,9 +52,9 @@ test('filter by values', t => {
 
     const filtered = filter.evaluate(data, columns);
 
-    t.is(2, filtered.length);
-    t.is(1, filtered[0].id);
-    t.is(2, filtered[1].id);
+    t.is(8, filtered.length);
+    t.is(11, filtered[0].id);
+    t.is(24, filtered[7].id);
 });
 
 test('filter by function', t => {
@@ -61,9 +69,9 @@ test('filter by function', t => {
 
     const filtered = filter.evaluate(data, columns);
 
-    t.is(2, filtered.length);
-    t.is(1, filtered[0].id);
-    t.is(2, filtered[1].id);
+    t.is(8, filtered.length);
+    t.is(11, filtered[0].id);
+    t.is(24, filtered[7].id);
 });
 
 test('skip filtering', t => {
@@ -71,7 +79,7 @@ test('skip filtering', t => {
         {
             physical: 0,
             expression: Expressions.byFunction((value: any): boolean => {
-                return value === 1;
+                return value >= 10 && value <= 19;
             })
         }, {
             physical: 1,
@@ -84,14 +92,14 @@ test('skip filtering', t => {
     {
         const filtered = filter.evaluate(data, columns);
 
-        t.is(1, filtered.length);
-        t.is(1, filtered[0].id);
+        t.is(4, filtered.length);
+        t.is(11, filtered[0].id);
     }
     {
         const filtered = filter.evaluate(data, columns, [0]);
 
-        t.is(2, filtered.length);
-        t.is(1, filtered[0].id);
-        t.is(2, filtered[1].id);
+        t.is(8, filtered.length);
+        t.is(11, filtered[0].id);
+        t.is(24, filtered[7].id);
     }
 });
