@@ -30,6 +30,7 @@ type propsType = {
 
 type stateType = {
     data: Array<any>,
+    columns: Array<Column>,
     columnSorting: ColumnSorting,
     columnMapping: Array<number>,
     hiddenColumns: Array<number>
@@ -52,12 +53,21 @@ export default class HotTableContainer extends React.Component {
         }
 
         const data = props.rowFilter ? props.rowFilter.evaluate(props.data, props.columns) : props.data;
+        const columns = props.columns.map((column: Column, index: number): Column => {
+            const hidden = (props.hiddenColumns || []).some((hidden: number): boolean => hidden === index);
+            if (hidden) {
+                return Object.assign({}, column, {width: () => 1e-20});
+            } else {
+                return column;
+            }
+        });
         const columnSorting = props.columnSorting || false;
         const columnMapping = props.columnMapping || [];
         const hiddenColumns = props.hiddenColumns || [];
 
         this.state = {
             data: data,
+            columns: columns,
             columnSorting: columnSorting,
             columnMapping: columnMapping,
             hiddenColumns: hiddenColumns
@@ -284,6 +294,14 @@ export default class HotTableContainer extends React.Component {
             newState.data = nextProps.rowFilter ? nextProps.rowFilter.evaluate(nextProps.data, nextProps.columns) : nextProps.data;
         }
         if (nextProps.hiddenColumns !== this.props.hiddenColumns) {
+            newState.columns = nextProps.columns.map((column: Column, index: number): Column => {
+                const hidden = (nextProps.hiddenColumns || []).some((hidden: number): boolean => hidden === index);
+                if (hidden) {
+                    return Object.assign({}, column, {width: () => 1e-20});
+                } else {
+                    return column;
+                }
+            });
             newState.hiddenColumns = nextProps.hiddenColumns;
         }
         this.setState(newState);
@@ -303,6 +321,7 @@ export default class HotTableContainer extends React.Component {
             <HotTable ref={hot => this.hot = hot}
                       {...props}
                       data={this.state.data}
+                      columns={this.state.columns}
                       columnSorting={this.state.columnSorting}
                       afterGetColHeader={this.afterGetColHeader.bind(this)}
                       afterColumnSort={this.afterColumnSort.bind(this)}
