@@ -355,36 +355,6 @@ export default class HotTableContainer extends React.Component {
         this.debug('plugin?', !!plugin);
 
         if (plugin) {
-            /*
-             * overwrite plugin's getColumnsWidth() to prevent from adding hidden columns' width into return value
-             */
-            const fn = (from: number, to: number): number => {
-                let width = 0;
-
-                for (let i = from; i < to; i++) {
-                    let columnWidth = 0;
-
-                    const hidden = this.state.hiddenColumns.some((hidden: number): boolean => {
-                        const visual = this.hot.hotInstance.toVisualColumn(hidden);
-                        return i === visual;
-                    });
-
-                    if (hidden) {
-                        columnWidth = 0;
-                    } else if (i < 0) {
-                        columnWidth = this.hot.hotInstance.view.wt.wtTable.getColumnWidth(i) || 0;
-                    } else {
-                        columnWidth = this.hot.hotInstance.view.wt.wtTable.getStretchedColumnWidth(i) || 0;
-                    }
-
-                    width += columnWidth;
-                }
-
-                return width;
-            };
-
-            plugin.getColumnsWidth = fn.bind(this);
-
             /**
              * move columns according to this.state.columnMapping
              */
