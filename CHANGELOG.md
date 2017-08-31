@@ -1,3 +1,9 @@
+## 0.3.0
+
+### Fixed
+
+- Fix initial column movement bug
+
 ## 0.2.0
 
 ### Added
