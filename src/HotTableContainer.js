@@ -360,16 +360,12 @@ export default class HotTableContainer extends React.Component {
              */
             this.state.columnMapping.map((element: number, index: number): { physical: number, visual: number } => {
                 return {physical: element, visual: index};
-            }).filter((element: { physical: number, visual: number }): boolean => {
-                return element.physical !== element.visual;
             }).sort((a: { physical: number, visual: number }, b: { physical: number, visual: number }): number => {
-                if (a.visual < b.visual) {
-                    return 1;
-                } else {
-                    return -1;
-                }
+                return a.visual - b.visual;
             }).forEach((element: { physical: number, visual: number }) => {
-                plugin.moveColumn(element.physical, element.visual + 1);
+                const visual = this.hot.hotInstance.toVisualColumn(element.physical);
+                const target = element.visual;
+                plugin.moveColumn(visual, target);
             });
 
             this.initialized = true;

@@ -43,7 +43,7 @@ storiesOf('Basic', module)
         );
     })
     .add('move column', () => {
-        const columnMapping = [0, 2, 3, 4, 1];
+        const columnMapping = [0, 3, 4, 1, 2];
 
         return (
             <HotTableContainer
@@ -56,7 +56,7 @@ storiesOf('Basic', module)
         );
     })
     .add('hide column', () => {
-        const columnMapping = [0, 2, 3, 4, 1];
+        const columnMapping = [0, 3, 4, 1, 2];
         const hiddenColumns = [3];
 
         return (
@@ -74,7 +74,7 @@ storiesOf('Basic', module)
             column: 4,
             sortOrder: false
         };
-        const columnMapping = [0, 2, 3, 4, 1];
+        const columnMapping = [0, 3, 4, 1, 2];
         const hiddenColumns = [3];
 
         return (
@@ -92,7 +92,7 @@ storiesOf('Basic', module)
             column: 4,
             sortOrder: false
         };
-        const columnMapping = [0, 2, 3, 4, 1];
+        const columnMapping = [0, 3, 4, 1, 2];
         const hiddenColumns = [3];
 
         return (
