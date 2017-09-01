@@ -7,6 +7,7 @@ import HotTable from 'react-handsontable';
 import type {Column, ColumnSorting, ColumnSortingObject} from "./HandsontableTypes";
 import type {PhysicalToExpression, Reevaluator} from "./RowFilter";
 import RowFilter from "./RowFilter";
+import {throttle} from "./EventThrottle";
 
 
 type propsType = {
@@ -23,6 +24,8 @@ type propsType = {
     beforeColumnMove?: (columns: Array<number>, target: number) => void,
     afterColumnMove?: (columns: Array<number>, target: number) => void,
     afterColumnResize?: (column: number, width: number, isDoubleClick: boolean) => void,
+    afterScrollHorizontally: () => void,
+    afterScrollVertically: () => void,
     afterUpdateSettings?: (settings: any) => void,
     rowFilter?: RowFilter,
     onClickRowFilterIndicator?: (ev: MouseEvent, column: number) => void
@@ -195,11 +198,32 @@ export default class HotTableContainer extends React.Component {
         }
     }
 
+    afterScrollHorizontally() {
+        try {
+            this.hot.hotInstance.updateSettings({});
+        } finally {
+            if (this.props.afterScrollHorizontally) {
+                this.props.afterScrollHorizontally();
+            }
+        }
+    }
+
+    afterScrollVertically() {
+        try {
+            this.hot.hotInstance.updateSettings({});
+        } finally {
+            if (this.props.afterScrollVertically) {
+                this.props.afterScrollVertically();
+            }
+        }
+    }
+
     afterUpdateSettings(settings: any) {
         try {
             requestAnimationFrame(() => {
                 const tables = this.hot.hotInstance.rootElement.querySelectorAll('.htCore');
                 const elementOffset = this.props.rowHeaders ? 2 : 1;
+                const viewportOffset = this.hot.hotInstance.colOffset();
 
                 const countCols = this.hot.hotInstance.countCols();
                 const range = Array.from({length: countCols}, (v: any, k: number): number => k);
@@ -208,18 +232,18 @@ export default class HotTableContainer extends React.Component {
 
                     const hidden = this.state.hiddenColumns.some((hidden: number): boolean => {
                         const visual = this.hot.hotInstance.toVisualColumn(hidden);
-                        return column === visual;
+                        return visual === column;
                     });
 
                     tables.forEach((table: HTMLElement) => {
-                        table.querySelectorAll(`col:nth-child(${column + elementOffset})`).forEach((cell: HTMLElement) => {
+                        table.querySelectorAll(`col:nth-child(${column + elementOffset - viewportOffset})`).forEach((cell: HTMLElement) => {
                             if (hidden) {
                                 cell.classList.add('hidden');
                             } else {
                                 cell.classList.remove('hidden');
                             }
                         });
-                        table.querySelectorAll(`th:nth-child(${column + elementOffset})`).forEach((cell: HTMLElement) => {
+                        table.querySelectorAll(`th:nth-child(${column + elementOffset - viewportOffset})`).forEach((cell: HTMLElement) => {
                             if (hidden) {
                                 cell.classList.add('hidden');
                             } else {
@@ -227,7 +251,7 @@ export default class HotTableContainer extends React.Component {
                             }
                             this.addRowFilterIndicator(column, cell, hidden);
                         });
-                        table.querySelectorAll(`td:nth-child(${column + elementOffset})`).forEach((cell: HTMLElement) => {
+                        table.querySelectorAll(`td:nth-child(${column + elementOffset - viewportOffset})`).forEach((cell: HTMLElement) => {
                             if (hidden) {
                                 cell.classList.add('hidden');
                             } else {
@@ -328,6 +352,8 @@ export default class HotTableContainer extends React.Component {
                       beforeColumnMove={this.beforeColumnMove.bind(this)}
                       afterColumnMove={this.afterColumnMove.bind(this)}
                       afterColumnResize={this.afterColumnResize.bind(this)}
+                      afterScrollHorizontally={throttle(this.afterScrollHorizontally.bind(this), 100)}
+                      afterScrollVertically={throttle(this.afterScrollVertically.bind(this), 100)}
                       afterUpdateSettings={this.afterUpdateSettings.bind(this)}/>
         );
     }
