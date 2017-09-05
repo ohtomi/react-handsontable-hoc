@@ -32,7 +32,6 @@ const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?'];
 
 storiesOf('Row Filter', module)
     .add('plain', () => {
-        const ref = {hoc: null};
         const names = [];
 
         const filter = new RowFilter([
