@@ -7,7 +7,7 @@ import HotTable from 'react-handsontable';
 import type {Column, ColumnSorting, ColumnSortingObject} from "./HandsontableTypes";
 import type {PhysicalToExpression, Reevaluator} from "./RowFilter";
 import RowFilter from "./RowFilter";
-import {throttle} from "./EventThrottle";
+import {debounce} from "./EventThrottle";
 
 
 type propsType = {
@@ -352,8 +352,8 @@ export default class HotTableContainer extends React.Component {
                       beforeColumnMove={this.beforeColumnMove.bind(this)}
                       afterColumnMove={this.afterColumnMove.bind(this)}
                       afterColumnResize={this.afterColumnResize.bind(this)}
-                      afterScrollHorizontally={throttle(this.afterScrollHorizontally.bind(this), 100)}
-                      afterScrollVertically={throttle(this.afterScrollVertically.bind(this), 100)}
+                      afterScrollHorizontally={debounce(this.afterScrollHorizontally.bind(this), 100)}
+                      afterScrollVertically={debounce(this.afterScrollVertically.bind(this), 100)}
                       afterUpdateSettings={this.afterUpdateSettings.bind(this)}/>
         );
     }
