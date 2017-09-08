@@ -33,6 +33,7 @@ type propsType = {
 
 type stateType = {
     data: Array<any>,
+    maxRows: number,
     columns: Array<Column>,
     columnSorting: ColumnSorting,
     columnMapping: Array<number>,
@@ -55,7 +56,7 @@ export default class HotTableContainer extends React.Component {
             props.rowFilter.reevaluator = reevaluator;
         }
 
-        const data = props.rowFilter ? props.rowFilter.evaluate(props.data, props.columns) : props.data;
+        const filtered = props.rowFilter ? props.rowFilter.evaluate(props.data, props.columns) : props.data;
         const columns = props.columns.map((column: Column, index: number): Column => {
             const hidden = (props.hiddenColumns || []).some((hidden: number): boolean => hidden === index);
             if (hidden) {
@@ -69,7 +70,8 @@ export default class HotTableContainer extends React.Component {
         const hiddenColumns = props.hiddenColumns || [];
 
         this.state = {
-            data: data,
+            data: filtered.length ? filtered : null,
+            maxRows: filtered.length,
             columns: columns,
             columnSorting: columnSorting,
             columnMapping: columnMapping,
@@ -78,7 +80,11 @@ export default class HotTableContainer extends React.Component {
     }
 
     evaluateRowFilter(data: Array<any>, columns: Array<Column>, rowFilter: RowFilter) {
-        this.setState({data: rowFilter.evaluate(data, columns)});
+        const filtered = rowFilter.evaluate(data, columns);
+        this.setState({
+            data: filtered.length ? filtered : null,
+            maxRows: filtered.length
+        });
     }
 
     afterGetColHeader(/*column: number, thEl: HTMLElement*/) {
@@ -345,6 +351,7 @@ export default class HotTableContainer extends React.Component {
             <HotTable ref={hot => this.hot = hot}
                       {...props}
                       data={this.state.data}
+                      maxRows={this.state.maxRows}
                       columns={this.state.columns}
                       columnSorting={this.state.columnSorting}
                       afterGetColHeader={this.afterGetColHeader.bind(this)}
