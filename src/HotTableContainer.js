@@ -32,7 +32,7 @@ type propsType = {
 };
 
 type stateType = {
-    data: Array<any>,
+    data: ?Array<any>,
     maxRows: number,
     columns: Array<Column>,
     columnSorting: ColumnSorting,
