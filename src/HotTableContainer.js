@@ -276,11 +276,10 @@ export default class HotTableContainer extends React.Component {
 
     addRowFilterIndicator(column: number, thEl: HTMLElement, hidden: boolean) {
         try {
-            if (thEl.firstChild && thEl.firstChild.lastChild && thEl.firstChild.lastChild.nodeName.toLowerCase() === 'button') {
-                thEl.firstChild.removeChild(thEl.firstChild.lastChild);
-            }
-
             if (!this.props.rowFilter || !this.props.onClickRowFilterIndicator || hidden) {
+                if (thEl.firstChild && thEl.firstChild.lastChild && thEl.firstChild.lastChild.nodeName.toLowerCase() === 'button') {
+                    thEl.firstChild.removeChild(thEl.firstChild.lastChild);
+                }
                 return;
             }
 
@@ -289,18 +288,26 @@ export default class HotTableContainer extends React.Component {
                 return expression.physical === physical;
             });
 
-            const buttonEl = document.createElement('button');
-            buttonEl.innerHTML = '\u25BC';
-            buttonEl.className = `changeType ${active ? 'active' : ''}`;
-            buttonEl.addEventListener('click', (ev: MouseEvent) => {
-                if (this.props.onClickRowFilterIndicator) {
-                    this.props.onClickRowFilterIndicator(ev, column);
+            if (thEl.firstChild && thEl.firstChild.lastChild && thEl.firstChild.lastChild.nodeName.toLowerCase() === 'button') {
+                // buttonEl will be HTMLElement though lastChild property has a pointer to Node.
+                const buttonEl: any = thEl.firstChild.lastChild;
+                if (buttonEl) {
+                    buttonEl.className = `changeType ${active ? 'active' : ''}`;
                 }
-            });
+            } else {
+                const buttonEl = document.createElement('button');
+                buttonEl.innerHTML = '\u25BC';
+                buttonEl.className = `changeType ${active ? 'active' : ''}`;
+                buttonEl.addEventListener('click', (ev: MouseEvent) => {
+                    if (this.props.onClickRowFilterIndicator) {
+                        this.props.onClickRowFilterIndicator(ev, column);
+                    }
+                });
 
-            if (thEl.firstChild) {
-                thEl.firstChild.appendChild(buttonEl);
-                thEl.style.whiteSpace = 'normal';
+                if (thEl.firstChild) {
+                    thEl.firstChild.appendChild(buttonEl);
+                    thEl.style.whiteSpace = 'normal';
+                }
             }
         } finally {
             if (this.props.afterGetColHeader) {
