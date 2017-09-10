@@ -1,10 +1,16 @@
-## 0.3.0
+## 0.4.0 (2017-09-10)
+
+### Fixed
+
+- Fix column order reset bug if filtered data is empty array
+
+## 0.3.0 (2017-09-01)
 
 ### Fixed
 
 - Fix initial column movement bug
 
-## 0.2.0
+## 0.2.0 (2017-08-27)
 
 ### Added
 
@@ -18,8 +24,8 @@
 
 ### Fixed
 
-- Fix eslint errors
-- Fix flowtype errors
+- Fix `eslint` errors
+- Fix `flowtype` errors
 
 ## 0.1.0 (2017-08-15)
 
