@@ -28,6 +28,7 @@ type propsType = {
     afterScrollVertically: () => void,
     afterUpdateSettings?: (settings: any) => void,
     rowFilter?: RowFilter,
+    rowFilterIndicatorClassName?: string,
     onClickRowFilterIndicator?: (ev: MouseEvent, column: number) => void
 };
 
@@ -292,12 +293,12 @@ export default class HotTableContainer extends React.Component {
                 // buttonEl will be HTMLElement though lastChild property has a pointer to Node.
                 const buttonEl: any = thEl.firstChild.lastChild;
                 if (buttonEl) {
-                    buttonEl.className = `changeType ${active ? 'active' : ''}`;
+                    buttonEl.className = `${this.props.rowFilterIndicatorClassName || 'rowFilterIndicator'} ${active ? 'active' : ''}`;
                 }
             } else {
                 const buttonEl = document.createElement('button');
                 buttonEl.innerHTML = '\u25BC';
-                buttonEl.className = `changeType ${active ? 'active' : ''}`;
+                buttonEl.className = `${this.props.rowFilterIndicatorClassName || 'rowFilterIndicator'} ${active ? 'active' : ''}`;
                 buttonEl.addEventListener('click', (ev: MouseEvent) => {
                     if (this.props.onClickRowFilterIndicator) {
                         this.props.onClickRowFilterIndicator(ev, column);
