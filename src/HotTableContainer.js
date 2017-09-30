@@ -335,7 +335,7 @@ export default class HotTableContainer extends React.Component {
             newState.columns = nextProps.columns.map((column: Column, index: number): Column => {
                 const hidden = (nextProps.hiddenColumns || []).some((hidden: number): boolean => hidden === index);
                 if (hidden) {
-                    return Object.assign({}, column, {width: () => 1e-20});
+                    return Object.assign({}, column, {width: 1e-20});
                 } else {
                     return column;
                 }
