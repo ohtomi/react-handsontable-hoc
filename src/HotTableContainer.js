@@ -24,6 +24,7 @@ type propsType = {
     beforeColumnMove?: (columns: Array<number>, target: number) => void,
     afterColumnMove?: (columns: Array<number>, target: number) => void,
     afterColumnResize?: (column: number, width: number, isDoubleClick: boolean) => void,
+    afterOnCellMouseDown?: (ev: MouseEvent, coords: { row: number }, td: HTMLElement) => void,
     afterScrollHorizontally: () => void,
     afterScrollVertically: () => void,
     afterUpdateSettings?: (settings: any) => void,
@@ -38,7 +39,8 @@ type stateType = {
     columns: Array<Column>,
     columnSorting: ColumnSorting,
     columnMapping: Array<number>,
-    hiddenColumns: Array<number>
+    hiddenColumns: Array<number>,
+    selectingCells: boolean
 };
 
 export default class HotTableContainer extends React.Component {
@@ -76,7 +78,8 @@ export default class HotTableContainer extends React.Component {
             columns: columns,
             columnSorting: columnSorting,
             columnMapping: columnMapping,
-            hiddenColumns: hiddenColumns
+            hiddenColumns: hiddenColumns,
+            selectingCells: false
         };
     }
 
@@ -201,6 +204,23 @@ export default class HotTableContainer extends React.Component {
         } finally {
             if (this.props.afterColumnResize) {
                 this.props.afterColumnResize(column, width, isDoubleClick);
+            }
+        }
+    }
+
+    afterOnCellMouseDown(ev: MouseEvent, coords: { row: number }, td: HTMLElement) {
+        // In case the row/column header was clicked, the index is negative.
+        this.debug('after on cell mouse down', ev, coords, td);
+
+        try {
+            if (coords.row < 0) {
+                this.setState({selectingCells: false});
+            } else {
+                this.setState({selectingCells: true});
+            }
+        } finally {
+            if (this.props.afterOnCellMouseDown) {
+                this.props.afterOnCellMouseDown(ev, coords, td);
             }
         }
     }
@@ -367,6 +387,7 @@ export default class HotTableContainer extends React.Component {
                       beforeColumnMove={this.beforeColumnMove.bind(this)}
                       afterColumnMove={this.afterColumnMove.bind(this)}
                       afterColumnResize={this.afterColumnResize.bind(this)}
+                      afterOnCellMouseDown={this.afterOnCellMouseDown.bind(this)}
                       afterScrollHorizontally={debounce(this.afterScrollHorizontally.bind(this), 100)}
                       afterScrollVertically={debounce(this.afterScrollVertically.bind(this), 100)}
                       afterUpdateSettings={this.afterUpdateSettings.bind(this)}/>
