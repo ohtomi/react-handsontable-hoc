@@ -231,7 +231,18 @@ export default class HotTableContainer extends React.Component {
         this.debug('after selection', r1, c1, r2, c2, preventScrolling);
 
         try {
-            // TODO
+            if (!this.state.selectingCells) {
+                return;
+            }
+            if (this.props.selectionMode === 'row') {
+                const fromCol = 0;
+                const toCol = this.hot.hotInstance.countCols() - 1;
+                const selected = this.hot.hotInstance.getSelectedRange();
+                if (r1 === selected.from.row && c1 === fromCol && r2 === selected.to.row && c2 === toCol) {
+                    return;
+                }
+                this.hot.hotInstance.selectCell(r1, fromCol, r2, toCol);
+            }
         } finally {
             if (this.props.afterSelection) {
                 this.props.afterSelection(r1, c1, r2, c2, preventScrolling);
