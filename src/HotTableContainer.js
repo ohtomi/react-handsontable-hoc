@@ -19,12 +19,14 @@ type propsType = {
     columnSorting?: ColumnSorting | null,
     columnMapping?: Array<number>,
     hiddenColumns?: Array<number>,
+    selectionMode?: 'cell' | 'row',
     afterGetColHeader: (column: number, th: HTMLElement) => void,
     afterColumnSort?: (column: number, sortOrder?: boolean) => void,
     beforeColumnMove?: (columns: Array<number>, target: number) => void,
     afterColumnMove?: (columns: Array<number>, target: number) => void,
     afterColumnResize?: (column: number, width: number, isDoubleClick: boolean) => void,
-    afterOnCellMouseDown?: (ev: MouseEvent, coords: { row: number }, td: HTMLElement) => void,
+    beforeOnCellMouseDown?: (ev: MouseEvent, coords: { row: number }, td: HTMLElement) => void,
+    afterSelection?: (r1: number, c1: number, r2: number, c2: number, preventScrolling: { value: boolean }) => void,
     afterScrollHorizontally: () => void,
     afterScrollVertically: () => void,
     afterUpdateSettings?: (settings: any) => void,
@@ -208,9 +210,9 @@ export default class HotTableContainer extends React.Component {
         }
     }
 
-    afterOnCellMouseDown(ev: MouseEvent, coords: { row: number }, td: HTMLElement) {
+    beforeOnCellMouseDown(ev: MouseEvent, coords: { row: number }, td: HTMLElement) {
         // In case the row/column header was clicked, the index is negative.
-        this.debug('after on cell mouse down', ev, coords, td);
+        this.debug('before on cell mouse down', ev, coords, td);
 
         try {
             if (coords.row < 0) {
@@ -219,8 +221,20 @@ export default class HotTableContainer extends React.Component {
                 this.setState({selectingCells: true});
             }
         } finally {
-            if (this.props.afterOnCellMouseDown) {
-                this.props.afterOnCellMouseDown(ev, coords, td);
+            if (this.props.beforeOnCellMouseDown) {
+                this.props.beforeOnCellMouseDown(ev, coords, td);
+            }
+        }
+    }
+
+    afterSelection(r1: number, c1: number, r2: number, c2: number, preventScrolling: { value: boolean }) {
+        this.debug('after selection', r1, c1, r2, c2, preventScrolling);
+
+        try {
+            // TODO
+        } finally {
+            if (this.props.afterSelection) {
+                this.props.afterSelection(r1, c1, r2, c2, preventScrolling);
             }
         }
     }
@@ -387,7 +401,8 @@ export default class HotTableContainer extends React.Component {
                       beforeColumnMove={this.beforeColumnMove.bind(this)}
                       afterColumnMove={this.afterColumnMove.bind(this)}
                       afterColumnResize={this.afterColumnResize.bind(this)}
-                      afterOnCellMouseDown={this.afterOnCellMouseDown.bind(this)}
+                      beforeOnCellMouseDown={this.beforeOnCellMouseDown.bind(this)}
+                      afterSelection={this.afterSelection.bind(this)}
                       afterScrollHorizontally={debounce(this.afterScrollHorizontally.bind(this), 100)}
                       afterScrollVertically={debounce(this.afterScrollVertically.bind(this), 100)}
                       afterUpdateSettings={this.afterUpdateSettings.bind(this)}/>
