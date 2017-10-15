@@ -1,3 +1,11 @@
+## 0.5.0 (2017-10-xx)
+
+### Added
+
+- Add selection mode
+  - `cell`: current or area selection (default)
+  - `row`: row(s) selection
+
 ## 0.4.0 (2017-09-10)
 
 ### Fixed
