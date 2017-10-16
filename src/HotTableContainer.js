@@ -404,6 +404,7 @@ export default class HotTableContainer extends React.Component {
             <HotTable ref={hot => this.hot = hot}
                       {...props}
                       data={this.state.data}
+                      startCols={this.state.columns.length}
                       maxRows={this.state.maxRows}
                       columns={this.state.columns}
                       columnSorting={this.state.columnSorting}
