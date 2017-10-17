@@ -41,8 +41,7 @@ type stateType = {
     columns: Array<Column>,
     columnSorting: ColumnSorting,
     columnMapping: Array<number>,
-    hiddenColumns: Array<number>,
-    selectingCells: boolean
+    hiddenColumns: Array<number>
 };
 
 export default class HotTableContainer extends React.Component {
@@ -51,6 +50,7 @@ export default class HotTableContainer extends React.Component {
     state: stateType;
 
     initialized: boolean;
+    selectingCells: boolean;
     hot: { hotInstance: Handsontable };
 
     constructor(props: propsType) {
@@ -80,8 +80,7 @@ export default class HotTableContainer extends React.Component {
             columns: columns,
             columnSorting: columnSorting,
             columnMapping: columnMapping,
-            hiddenColumns: hiddenColumns,
-            selectingCells: false
+            hiddenColumns: hiddenColumns
         };
     }
 
@@ -216,9 +215,9 @@ export default class HotTableContainer extends React.Component {
 
         try {
             if (coords.row < 0) {
-                this.setState({selectingCells: false});
+                this.selectingCells = false;
             } else {
-                this.setState({selectingCells: true});
+                this.selectingCells = true;
             }
         } finally {
             if (this.props.beforeOnCellMouseDown) {
@@ -231,7 +230,7 @@ export default class HotTableContainer extends React.Component {
         this.debug('after selection', r1, c1, r2, c2, preventScrolling);
 
         try {
-            if (!this.state.selectingCells) {
+            if (!this.selectingCells) {
                 return;
             }
             if (this.props.selectionMode === 'row') {
