@@ -1,5 +1,9 @@
 ## 0.5.0 (2017-10-xx)
 
+### Fixed
+
+- Fix initial column moving problem
+
 ### Added
 
 - Add selection mode
