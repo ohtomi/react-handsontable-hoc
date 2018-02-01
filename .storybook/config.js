@@ -6,6 +6,7 @@ function loadStories() {
     require('../stories/RowFilter');
     require('../stories/SelectionMode');
     require('../stories/Viewport');
+    require('../stories/CustomRenderer');
 }
 
 configure(loadStories, module);
