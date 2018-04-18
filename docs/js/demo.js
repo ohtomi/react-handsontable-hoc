@@ -9655,7 +9655,7 @@ var Demo = function (_React$Component) {
             // filter by NAME
             var filter = new _reactHandsontableHoc.RowFilter([{
                 physical: 1,
-                expression: Expressions.get({
+                expression: _reactHandsontableHoc.Expressions.get({
                     symbol: 'by_values',
                     props: ['ford', 'volvo']
                 })

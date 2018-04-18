@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {HotTableContainer, RowFilter} from '@ohtomi/react-handsontable-hoc';
+import {HotTableContainer, RowFilter, Expressions} from '@ohtomi/react-handsontable-hoc';
 
 
 class Demo extends React.Component {

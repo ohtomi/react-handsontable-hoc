@@ -10,7 +10,7 @@
 ```javascript
 import React from 'react';
 
-import {HotTableContainer, RowFilter} from 'react-handsontable';
+import {HotTableContainer, RowFilter, Expressions} from 'react-handsontable';
 
 
 class Demo extends React.Component {
