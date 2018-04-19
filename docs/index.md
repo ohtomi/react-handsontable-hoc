@@ -1,10 +1,3 @@
-# Demo
-
-<div>
-    <div id="root"></div>
-</div>
-<script src="js/demo.js"></script>
-
 ## source code
 
 ```javascript
@@ -81,3 +74,4 @@ class Demo extends React.Component {
     }
 }
 ```
+<script src="js/demo.js"></script>
