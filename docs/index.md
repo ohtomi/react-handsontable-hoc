@@ -1,4 +1,11 @@
-# source code
+# Demo
+
+<div>
+    <div id="root">
+</div>
+<script src="js/demo.js"></script>
+
+## source code
 
 ```javascript
 import React from 'react';
@@ -74,4 +81,3 @@ class Demo extends React.Component {
     }
 }
 ```
-<script src="js/demo.js"></script>

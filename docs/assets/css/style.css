@@ -735,7 +735,7 @@ a:hover {
     margin-bottom: 0
 }
 
-.main-content table {
+/* .main-content table {
     display: block;
     width: 100%;
     overflow: auto;
@@ -751,7 +751,7 @@ a:hover {
 .main-content table th, .main-content table td {
     padding: 0.5rem 1rem;
     border: 1px solid #e9ebec
-}
+} */
 
 .main-content dl {
     padding: 0
