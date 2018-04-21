@@ -735,7 +735,7 @@ a:hover {
     margin-bottom: 0
 }
 
-.main-content #id {
+.main-content #root {
     word-wrap: normal;
 }
 /* .main-content table {
