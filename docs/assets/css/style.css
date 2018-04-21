@@ -736,7 +736,7 @@ a:hover {
 }
 
 .main-content #id {
-    word-wrap: none;
+    word-wrap: normal;
 }
 /* .main-content table {
     display: block;
