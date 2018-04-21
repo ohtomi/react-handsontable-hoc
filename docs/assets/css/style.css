@@ -735,6 +735,9 @@ a:hover {
     margin-bottom: 0
 }
 
+.main-content table {
+    word-wrap: none;
+}
 /* .main-content table {
     display: block;
     width: 100%;
