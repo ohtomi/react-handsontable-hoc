@@ -1,7 +1,7 @@
 # Demo
 
 <div>
-    <div id="root">
+    <div id="root"></div>
 </div>
 <script src="js/demo.js"></script>
 
