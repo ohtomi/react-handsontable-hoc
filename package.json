@@ -11,10 +11,10 @@
     "clear": "rimraf dist coverage .nyc_output",
     "flow": "flow",
     "lint": "eslint src/ test/",
-    "compile": "cross-env NODE_ENV=production webpack --progress --profile",
+    "compile": "cross-env webpack --progress --profile",
     "test": "cross-env NODE_ENV=test ava --verbose",
     "cover": "nyc --reporter=html --reporter=text npm run test",
-    "start": "cross-env NODE_ENV=development webpack-dev-server",
+    "start": "run-s storybook",
     "storybook": "start-storybook -p 9080",
     "watch": "run-p watch:*",
     "watch:src": "chokidar src/**/*.js -c \"npm run compile\"",
@@ -60,7 +60,7 @@
     "sinon": "^6.1.3",
     "tap-notify": "^1.0.0",
     "webpack": "^4.16.0",
-    "webpack-dev-server": "^3.1.4"
+    "webpack-cli": "^3.1.0"
   },
   "ava": {
     "files": [
