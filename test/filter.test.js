@@ -1,5 +1,6 @@
 import test from 'ava';
 
+/* eslint import/no-unresolved: 0 */
 import {RowFilter, Expressions} from '../dist/';
 
 
