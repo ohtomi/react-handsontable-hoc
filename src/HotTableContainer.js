@@ -44,7 +44,7 @@ type stateType = {
     hiddenColumns: Array<number>
 };
 
-export default class HotTableContainer extends React.Component {
+export default class HotTableContainer extends React.Component<propsType, stateType> {
 
     props: propsType;
     state: stateType;
@@ -400,7 +400,7 @@ export default class HotTableContainer extends React.Component {
         const props = Object.assign({}, this.props);
 
         return (
-            <HotTable ref={hot => this.hot = hot}
+            <HotTable ref={hot => { if (hot) { this.hot = hot }}}
                       {...props}
                       data={this.state.data}
                       startCols={this.state.columns.length}
