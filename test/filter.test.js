@@ -1,5 +1,4 @@
 import test from 'ava';
-import React from 'react';
 
 import {RowFilter, Expressions} from '../dist/';
 
@@ -51,7 +50,7 @@ test('filter by function', t => {
     const filter = new RowFilter([
         {
             physical: 0,
-            expression: Expressions.byFunction((value: any): boolean => {
+            expression: Expressions.byFunction(value => {
                 return value === '0-0' || value === '1-0';
             })
         }
@@ -68,12 +67,12 @@ test('skip filtering', t => {
     const filter = new RowFilter([
         {
             physical: 0,
-            expression: Expressions.byFunction((value: any): boolean => {
+            expression: Expressions.byFunction(value => {
                 return value <= '1-0';
             })
         }, {
             physical: 1,
-            expression: Expressions.byFunction((value: any): boolean => {
+            expression: Expressions.byFunction(value => {
                 return value >= '1-1';
             })
         }
