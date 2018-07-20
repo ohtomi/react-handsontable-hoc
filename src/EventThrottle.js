@@ -13,7 +13,9 @@ export function throttle(func: Function, wait: number): Function {
 export function debounce(func: Function, wait: number): Function {
     let timeoutId;
     return () => {
-        clearTimeout(timeoutId);
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
         timeoutId = setTimeout(() => {
             func();
             timeoutId = null;
