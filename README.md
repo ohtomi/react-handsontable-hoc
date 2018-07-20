@@ -2,7 +2,8 @@
 
 [![npm](https://img.shields.io/npm/v/@ohtomi/react-handsontable-hoc.svg)](https://www.npmjs.com/package/@ohtomi/react-handsontable-hoc)
 [![License](https://img.shields.io/npm/l/@ohtomi/react-handsontable-hoc.svg)](https://www.npmjs.com/package/@ohtomi/react-handsontable-hoc)
-[![Build Status](https://travis-ci.org/ohtomi/react-handsontable-hoc.svg?branch=master)](https://travis-ci.org/ohtomi/react-handsontable-hoc) [![Greenkeeper badge](https://badges.greenkeeper.io/ohtomi/react-handsontable-hoc.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/ohtomi/react-handsontable-hoc.svg?branch=master)](https://travis-ci.org/ohtomi/react-handsontable-hoc)
+[![Greenkeeper badge](https://badges.greenkeeper.io/ohtomi/react-handsontable-hoc.svg)](https://greenkeeper.io/)
 
 ## Description
 
