@@ -2,11 +2,11 @@
   "name": "@ohtomi/react-handsontable-hoc-demo",
   "version": "1.0.0",
   "description": "A demo for @ohtomi/react-handsontable-hoc.",
+  "license": "MIT",
+  "author": "Kenichi Ohtomi",
   "scripts": {
     "compile": "webpack --progress --profile"
   },
-  "author": "Kenichi Ohtomi",
-  "license": "MIT",
   "devDependencies": {
     "@ohtomi/react-handsontable-hoc": "^0.5.1",
     "babel-core": "^6.25.0",
