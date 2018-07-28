@@ -365,7 +365,7 @@ export default class HotTableContainer extends React.Component<propsType, stateT
         this.initializeHotTable();
     }
 
-    componentWillReceiveProps(nextProps: propsType) {
+    UNSAFE_componentWillReceiveProps(nextProps: propsType) {
         const reevaluator: Reevaluator = this.evaluateRowFilter.bind(this, nextProps.data, nextProps.columns);
         if (nextProps.rowFilter) {
             nextProps.rowFilter.reevaluator = reevaluator;
