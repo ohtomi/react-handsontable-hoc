@@ -1,7 +1,10 @@
 {
   "presets": [
-    "es2015",
-    "flow",
-    "react"
+    "@babel/preset-env",
+    {
+      "useBuiltIns": "entry"
+    },
+    "@babel/preset-flow",
+    "@babel/preset-react"
   ]
 }
