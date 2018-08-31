@@ -85,7 +85,7 @@
     "files": [
       "test/**/*.test.js"
     ],
-    "source": [
+    "sources": [
       "src/**/*.{js,jsx}"
     ],
     "require": [
