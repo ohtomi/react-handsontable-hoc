@@ -93,9 +93,9 @@
     ],
     "babel": {
       "extensions": ["js", "jsx"],
-			"testOptions": {
-				"babelrc": false
-			}
+      "testOptions": {
+        "babelrc": true
+      }
     }
   }
 }
