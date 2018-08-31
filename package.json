@@ -91,6 +91,11 @@
     "require": [
       "./test/setup.js"
     ],
-    "babel": "inherit"
+    "babel": {
+      "extensions": ["js", "jsx"],
+			"testOptions": {
+				"babelrc": false
+			}
+    }
   }
 }
