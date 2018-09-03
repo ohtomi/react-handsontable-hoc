@@ -6,9 +6,6 @@ import RowFilter from './RowFilter';
 import * as Expressions from './Expression';
 
 
-const m = {
-    HotTableContainer,
-    RowFilter,
-    Expressions
-};
-export default m;
+export HotTableContainer;
+export RowFilter;
+export Expressions;
