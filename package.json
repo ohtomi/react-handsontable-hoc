@@ -91,6 +91,8 @@
     "require": [
       "./test/setup.js"
     ],
-    "babel": "inherit"
+    "babel": {
+      "testOptions": {}
+    }
   }
 }
