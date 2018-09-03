@@ -6,7 +6,7 @@ import RowFilter from './RowFilter';
 import * as Expressions from './Expression';
 
 
-export default module = {
+export default m = {
     HotTableContainer,
     RowFilter,
     Expressions
