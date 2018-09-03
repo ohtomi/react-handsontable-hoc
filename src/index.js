@@ -1,3 +1,3 @@
-export HotTableContainer from './HotTableContainer';
-export RowFilter from './RowFilter';
+export { default } from './HotTableContainer';
+export { default } from './RowFilter';
 export * as Expressions from './Expression';
