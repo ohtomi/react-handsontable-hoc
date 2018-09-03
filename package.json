@@ -43,6 +43,7 @@
     "@storybook/react": "^3.3.9",
     "@babel/core": "^7.0.0",
     "@babel/plugin-proposal-export-default-from": "^7.0.0",
+    "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
