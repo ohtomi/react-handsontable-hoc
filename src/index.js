@@ -6,6 +6,6 @@ import RowFilter from './RowFilter';
 import * as Expressions from './Expression';
 
 
-export HotTableContainer;
-export RowFilter;
-export Expressions;
+export HotTableContainer = HotTableContainer;
+export RowFilter = RowFilter;
+export Expressions = Expressions;
