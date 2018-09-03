@@ -1,11 +1,5 @@
 // @flow
 
-import HotTableContainer from './HotTableContainer';
-
-import RowFilter from './RowFilter';
-import * as Expressions from './Expression';
-
-
-export HotTableContainer = HotTableContainer;
-export RowFilter = RowFilter;
-export Expressions = Expressions;
+export HotTableContainer from './HotTableContainer';
+export RowFilter from './RowFilter';
+export * as Expressions from './Expression';
