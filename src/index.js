@@ -1,13 +1,3 @@
-// @flow
-
-import HotTableContainer from './HotTableContainer';
-
-import RowFilter from './RowFilter';
-import * as Expressions from './Expression';
-
-
-module.exports = {
-    HotTableContainer,
-    RowFilter,
-    Expressions
-};
+export HotTableContainer from './HotTableContainer';
+export RowFilter from './RowFilter';
+export * as Expressions from './Expression';
