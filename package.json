@@ -65,7 +65,7 @@
     "eslint-plugin-security": "^1.4.0",
     "flow-bin": "^0.81.0",
     "flow-typed": "^2.2.3",
-    "handsontable": "^5.0.0",
+    "handsontable": "^6.0.0",
     "jsdom": "^12.0.0",
     "npm-run-all": "^4.1.2",
     "nyc": "^12.0.2",
