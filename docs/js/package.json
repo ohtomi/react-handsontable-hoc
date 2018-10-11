@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@ohtomi/react-handsontable-hoc": "^0.5.1",
-    "@babel/core": "^7.0.0",
+    "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.2",
