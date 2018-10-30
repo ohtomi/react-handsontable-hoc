@@ -1,4 +1,5 @@
 import {configure} from '@storybook/react';
+import 'handsontable/dist/handsontable.full.css';
 
 function loadStories() {
     require('../stories/Basic');

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Handsontable from 'handsontable';
-import HotTable from 'react-handsontable';
+import {HotTable} from '@handsontable/react';
 
 import type {Column, ColumnSorting, ColumnSortingObject} from "./HandsontableTypes";
 import type {PhysicalToExpression, Reevaluator} from "./RowFilter";
