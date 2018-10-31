@@ -9,7 +9,7 @@ export type Column = {
 
 export type ColumnSortingObject = {
     column: number,
-    sortOrder: boolean | null
+    sortOrder: 'asc' | 'desc'
 }
 
 export type ColumnSorting = ColumnSortingObject | boolean

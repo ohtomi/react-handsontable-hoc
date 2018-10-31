@@ -36,7 +36,7 @@ const hiddenColumns = [3]
 // sort by NAME
 const columnSorting = {
     column: 4,
-    sortOrder: false
+    sortOrder: 'desc'
 }
 
 // filter by NAME

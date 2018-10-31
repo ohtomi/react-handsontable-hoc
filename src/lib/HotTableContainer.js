@@ -21,11 +21,8 @@ type propsType = {
     columnMapping?: Array<number>,
     hiddenColumns?: Array<number>,
     selectionMode?: 'cell' | 'row',
-    afterGetColHeader: (column: number, th: HTMLElement) => void,
-    afterColumnSort?: (column: number, sortOrder?: boolean) => void,
+    afterColumnSort?: (currentSortConfig: Array<ColumnSortingObject>, destinationSortConfigs: Array<ColumnSortingObject>) => void,
     beforeColumnMove?: (columns: Array<number>, target: number) => void,
-    afterColumnMove?: (columns: Array<number>, target: number) => void,
-    afterColumnResize?: (column: number, width: number, isDoubleClick: boolean) => void,
     beforeOnCellMouseDown?: (ev: MouseEvent, coords: { row: number }, td: HTMLElement) => void,
     afterSelection?: (r1: number, c1: number, r2: number, c2: number, preventScrolling: { value: boolean }) => void,
     afterUpdateSettings?: (settings: any) => void,
@@ -93,33 +90,18 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
         })
     }
 
-    afterGetColHeader(/*column: number, thEl: HTMLElement*/) {
-        // column is visual column index.
-    }
-
-    afterColumnSort(column: number, sortOrder?: boolean) {
-        // column is visual column index.
-        this.debug('after column sort', column, sortOrder)
+    afterColumnSort(currentSortConfigs: Array<ColumnSortingObject>, destinationSortConfigs: Array<ColumnSortingObject>) {
+        // currentSortConfigs is Current sort configuration (for all sorted columns).
+        // destinationSortConfigs is Destination sort configuration (for all sorted columns).
+        this.debug('after column sort', currentSortConfigs, destinationSortConfigs)
 
         try {
-            if (this.state.columnSorting && this.state.columnSorting.column === column && this.state.columnSorting.sortOrder === sortOrder) {
-                return
-            }
-
-            if (sortOrder !== undefined) {
-                this.setState({
-                    columnSorting: {
-                        column: column,
-                        sortOrder: sortOrder
-                    }
-                })
+            if (destinationSortConfigs.length) {
+                if (this.state.columnSorting.column !== destinationSortConfigs[0].column || this.state.columnSorting.sortOrder !== destinationSortConfigs[0].sortOrder) {
+                    this.setState({columnSorting: destinationSortConfigs[0]})
+                }
             } else {
-                this.setState({
-                    columnSorting: {
-                        column: column,
-                        sortOrder: null
-                    }
-                })
+                this.setState({columnSorting: true})
             }
         } finally {
             if (this.props.afterColumnSort) {
@@ -183,33 +165,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
         }
     }
 
-    afterColumnMove(columns: Array<number>, target: number) {
-        // columns are an array of physical column indexes. document bug?
-        // target is visual column index.
-        this.debug('after column move', `[${columns.join(', ')}]`, target)
-
-        try {
-            this.hot.current.hotInstance.updateSettings({})
-        } finally {
-            if (this.props.afterColumnMove && this.initialized) {
-                this.props.afterColumnMove(columns, target)
-            }
-        }
-    }
-
-    afterColumnResize(column: number, width: number, isDoubleClick: boolean) {
-        // column is visual column index.
-        this.debug('after column resize', column, width, isDoubleClick)
-
-        try {
-            this.hot.current.hotInstance.updateSettings({})
-        } finally {
-            if (this.props.afterColumnResize) {
-                this.props.afterColumnResize(column, width, isDoubleClick)
-            }
-        }
-    }
-
     beforeOnCellMouseDown(ev: MouseEvent, coords: { row: number }, td: HTMLElement) {
         // In case the row/column header was clicked, the index is negative.
         this.debug('before on cell mouse down', ev, coords, td)
@@ -248,44 +203,42 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
 
     afterUpdateSettings(settings: any) {
         try {
-            requestAnimationFrame(() => {
-                const tables = this.hot.current.hotInstance.rootElement.querySelectorAll('.htCore')
-                const elementOffset = this.props.rowHeaders ? 2 : 1
-                const viewportOffset = this.hot.current.hotInstance.colOffset()
+            const tables = this.hot.current.hotInstance.rootElement.querySelectorAll('.htCore')
+            const elementOffset = this.props.rowHeaders ? 2 : 1
+            const viewportOffset = this.hot.current.hotInstance.colOffset()
 
-                const countCols = this.hot.current.hotInstance.countCols()
-                const range = Array.from({length: countCols}, (v: any, k: number): number => k)
+            const countCols = this.hot.current.hotInstance.countCols()
+            const range = Array.from({length: countCols}, (v: any, k: number): number => k)
 
-                range.forEach((column: number) => {
+            range.forEach((column: number) => {
 
-                    const hidden = this.state.hiddenColumns.some((hidden: number): boolean => {
-                        const visual = this.hot.current.hotInstance.toVisualColumn(hidden)
-                        return visual === column
+                const hidden = this.state.hiddenColumns.some((hidden: number): boolean => {
+                    const visual = this.hot.current.hotInstance.toVisualColumn(hidden)
+                    return visual === column
+                })
+
+                tables.forEach((table: HTMLElement) => {
+                    table.querySelectorAll(`col:nth-child(${column + elementOffset - viewportOffset})`).forEach((cell: HTMLElement) => {
+                        if (hidden) {
+                            cell.classList.add('hidden')
+                        } else {
+                            cell.classList.remove('hidden')
+                        }
                     })
-
-                    tables.forEach((table: HTMLElement) => {
-                        table.querySelectorAll(`col:nth-child(${column + elementOffset - viewportOffset})`).forEach((cell: HTMLElement) => {
-                            if (hidden) {
-                                cell.classList.add('hidden')
-                            } else {
-                                cell.classList.remove('hidden')
-                            }
-                        })
-                        table.querySelectorAll(`th:nth-child(${column + elementOffset - viewportOffset})`).forEach((cell: HTMLElement) => {
-                            if (hidden) {
-                                cell.classList.add('hidden')
-                            } else {
-                                cell.classList.remove('hidden')
-                            }
-                            this.addRowFilterIndicator(column, cell, hidden)
-                        })
-                        table.querySelectorAll(`td:nth-child(${column + elementOffset - viewportOffset})`).forEach((cell: HTMLElement) => {
-                            if (hidden) {
-                                cell.classList.add('hidden')
-                            } else {
-                                cell.classList.remove('hidden')
-                            }
-                        })
+                    table.querySelectorAll(`th:nth-child(${column + elementOffset - viewportOffset})`).forEach((cell: HTMLElement) => {
+                        if (hidden) {
+                            cell.classList.add('hidden')
+                        } else {
+                            cell.classList.remove('hidden')
+                        }
+                        this.addRowFilterIndicator(column, cell, hidden)
+                    })
+                    table.querySelectorAll(`td:nth-child(${column + elementOffset - viewportOffset})`).forEach((cell: HTMLElement) => {
+                        if (hidden) {
+                            cell.classList.add('hidden')
+                        } else {
+                            cell.classList.remove('hidden')
+                        }
                     })
                 })
             })
@@ -297,43 +250,37 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
     }
 
     addRowFilterIndicator(column: number, thEl: HTMLElement, hidden: boolean) {
-        try {
-            if (!this.props.rowFilter || !this.props.onClickRowFilterIndicator || hidden) {
-                if (thEl.firstChild && thEl.firstChild.lastChild && thEl.firstChild.lastChild.nodeName.toLowerCase() === 'button') {
-                    thEl.firstChild.removeChild(thEl.firstChild.lastChild)
-                }
-                return
+        if (!this.props.rowFilter || !this.props.onClickRowFilterIndicator || hidden) {
+            if (thEl.firstChild && thEl.firstChild.lastChild && thEl.firstChild.lastChild.nodeName.toLowerCase() === 'button') {
+                thEl.firstChild.removeChild(thEl.firstChild.lastChild)
             }
+            return
+        }
 
-            const physical = this.hot.current.hotInstance.toPhysicalColumn(column)
-            const active = this.props.rowFilter && this.props.rowFilter.expressions.some((expression: PhysicalToExpression): boolean => {
-                return expression.physical === physical
+        const physical = this.hot.current.hotInstance.toPhysicalColumn(column)
+        const active = this.props.rowFilter && this.props.rowFilter.expressions.some((expression: PhysicalToExpression): boolean => {
+            return expression.physical === physical
+        })
+
+        if (thEl.firstChild && thEl.firstChild.lastChild && thEl.firstChild.lastChild.nodeName.toLowerCase() === 'button') {
+            // buttonEl will be HTMLElement though lastChild property has a pointer to Node.
+            const buttonEl: any = thEl.firstChild.lastChild
+            if (buttonEl) {
+                buttonEl.className = `${this.props.rowFilterIndicatorClassName || 'rowFilterIndicator'} ${active ? 'active' : ''}`
+            }
+        } else {
+            const buttonEl = document.createElement('button')
+            buttonEl.innerHTML = '\u25BC'
+            buttonEl.className = `${this.props.rowFilterIndicatorClassName || 'rowFilterIndicator'} ${active ? 'active' : ''}`
+            buttonEl.addEventListener('click', (ev: MouseEvent) => {
+                if (this.props.onClickRowFilterIndicator) {
+                    this.props.onClickRowFilterIndicator(ev, column)
+                }
             })
 
-            if (thEl.firstChild && thEl.firstChild.lastChild && thEl.firstChild.lastChild.nodeName.toLowerCase() === 'button') {
-                // buttonEl will be HTMLElement though lastChild property has a pointer to Node.
-                const buttonEl: any = thEl.firstChild.lastChild
-                if (buttonEl) {
-                    buttonEl.className = `${this.props.rowFilterIndicatorClassName || 'rowFilterIndicator'} ${active ? 'active' : ''}`
-                }
-            } else {
-                const buttonEl = document.createElement('button')
-                buttonEl.innerHTML = '\u25BC'
-                buttonEl.className = `${this.props.rowFilterIndicatorClassName || 'rowFilterIndicator'} ${active ? 'active' : ''}`
-                buttonEl.addEventListener('click', (ev: MouseEvent) => {
-                    if (this.props.onClickRowFilterIndicator) {
-                        this.props.onClickRowFilterIndicator(ev, column)
-                    }
-                })
-
-                if (thEl.firstChild) {
-                    thEl.firstChild.appendChild(buttonEl)
-                    thEl.style.whiteSpace = 'normal'
-                }
-            }
-        } finally {
-            if (this.props.afterGetColHeader) {
-                this.props.afterGetColHeader(column, thEl)
+            if (thEl.firstChild) {
+                thEl.firstChild.appendChild(buttonEl)
+                thEl.style.whiteSpace = 'normal'
             }
         }
     }
@@ -364,7 +311,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
             newState.hiddenColumns = nextProps.hiddenColumns
         }
         this.setState(newState)
-        this.hot.current.hotInstance.updateSettings({})
     }
 
     componentDidUpdate() {
@@ -383,12 +329,9 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
                       startCols={this.state.columns.length}
                       maxRows={this.state.maxRows}
                       columns={this.state.columns}
-                      columnSorting={this.state.columnSorting}
-                      afterGetColHeader={this.afterGetColHeader.bind(this)}
+                      columnSorting={{initialConfig: this.state.columnSorting}}
                       afterColumnSort={this.afterColumnSort.bind(this)}
                       beforeColumnMove={this.beforeColumnMove.bind(this)}
-                      afterColumnMove={this.afterColumnMove.bind(this)}
-                      afterColumnResize={this.afterColumnResize.bind(this)}
                       beforeOnCellMouseDown={this.beforeOnCellMouseDown.bind(this)}
                       afterSelection={this.afterSelection.bind(this)}
                       afterUpdateSettings={this.afterUpdateSettings.bind(this)}/>

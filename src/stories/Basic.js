@@ -72,7 +72,7 @@ storiesOf('Basic', module)
     .add('sort column', () => {
         const columnSorting = {
             column: 4,
-            sortOrder: false
+            sortOrder: 'desc'
         }
         const columnMapping = [0, 3, 4, 1, 2]
         const hiddenColumns = [3]
@@ -90,7 +90,7 @@ storiesOf('Basic', module)
     .add('with row header', () => {
         const columnSorting = {
             column: 4,
-            sortOrder: false
+            sortOrder: 'desc'
         }
         const columnMapping = [0, 3, 4, 1, 2]
         const hiddenColumns = [3]

@@ -1,13 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-import {HotTableContainer, RowFilter, Expressions} from '@ohtomi/react-handsontable-hoc';
+import {Expressions, HotTableContainer, RowFilter} from '@ohtomi/react-handsontable-hoc'
 
 
 class Demo extends React.Component {
 
     constructor(props) {
-        super(props);
+        super(props)
     }
 
     render() {
@@ -24,30 +24,30 @@ class Demo extends React.Component {
             {'id': 32, 'name': 'toyota', 'year': 2017, 'volume': 1000, 'processed': true},
             {'id': 33, 'name': 'toyota', 'year': 2018, 'volume': 1000, 'processed': true},
             {'id': 41, 'name': 'honda', 'year': 2015, 'volume': 1000, 'processed': true}
-        ];
-    
+        ]
+
         const columns = [
             {data: 'id', type: 'numeric', width: 150, readOnly: true},
             {data: 'name', type: 'text', width: 150, readOnly: true},
             {data: 'year', type: 'numeric', width: 150, readOnly: true},
             {data: 'volume', type: 'numeric', width: 150, readOnly: true},
             {data: data => data.processed ? 'Yes' : 'No', type: 'text', width: 150, readOnly: true}
-        ];
-    
-        const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?'];
-    
+        ]
+
+        const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
+
         // column order: ID, YEAR, VOLUME, PROCESSED?, NAME
-        const columnMapping = [0, 2, 3, 4, 1];
-    
+        const columnMapping = [0, 2, 3, 4, 1]
+
         // VOLUME is hidden
-        const hiddenColumns = [3];
-    
+        const hiddenColumns = [3]
+
         // sort by NAME
         const columnSorting = {
             column: 4,
-            sortOrder: false
-        };
-    
+            sortOrder: 'desc'
+        }
+
         // filter by NAME
         const filter = new RowFilter([
             {
@@ -57,8 +57,8 @@ class Demo extends React.Component {
                     props: ['ford', 'volvo']
                 })
             }
-        ]);
-    
+        ])
+
         return (
             <HotTableContainer
                 width="800" height="300"
@@ -68,11 +68,11 @@ class Demo extends React.Component {
                 manualColumnMove={true}
                 manualColumnResize={true}
                 rowFilter={filter}/>
-        );
+        )
     }
 }
 
 
-const containerEl = document.getElementById('root');
+const containerEl = document.getElementById('root')
 
-ReactDOM.render(<Demo />, containerEl);
+ReactDOM.render(<Demo/>, containerEl)

@@ -54,7 +54,7 @@ class Demo extends React.Component {
         // sort by NAME
         const columnSorting = {
             column: 4,
-            sortOrder: false
+            sortOrder: 'desc'
         };
     
         // filter by NAME
