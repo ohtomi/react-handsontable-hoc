@@ -50,10 +50,12 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
 
     initialized: boolean
     selectingCells: boolean
-    hot: { current: { hotInstance: Handsontable } } = React.createRef()
+    hot: { current: { hotInstance: Handsontable } }
 
     constructor(props: propsType) {
         super(props)
+
+        this.hot = React.createRef()
 
         const reevaluator: Reevaluator = this.evaluateRowFilter.bind(this, props.data, props.columns)
         if (props.rowFilter) {
