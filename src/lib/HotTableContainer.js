@@ -7,7 +7,6 @@ import {HotTable} from '@handsontable/react'
 import type {Column, ColumnSorting, ColumnSortingObject} from './HandsontableTypes'
 import type {PhysicalToExpression, Reevaluator} from './RowFilter'
 import {RowFilter} from './RowFilter'
-import {debounce} from './EventThrottle'
 
 import 'handsontable/dist/handsontable.full.css'
 
@@ -29,8 +28,6 @@ type propsType = {
     afterColumnResize?: (column: number, width: number, isDoubleClick: boolean) => void,
     beforeOnCellMouseDown?: (ev: MouseEvent, coords: { row: number }, td: HTMLElement) => void,
     afterSelection?: (r1: number, c1: number, r2: number, c2: number, preventScrolling: { value: boolean }) => void,
-    afterScrollHorizontally: () => void,
-    afterScrollVertically: () => void,
     afterUpdateSettings?: (settings: any) => void,
     rowFilter?: RowFilter,
     rowFilterIndicatorClassName?: string,
@@ -53,7 +50,7 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
 
     initialized: boolean
     selectingCells: boolean
-    hot: { hotInstance: Handsontable }
+    hot: { current: { hotInstance: Handsontable } } = React.createRef()
 
     constructor(props: propsType) {
         super(props)
@@ -190,7 +187,7 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
         this.debug('after column move', `[${columns.join(', ')}]`, target)
 
         try {
-            this.hot.hotInstance.updateSettings({})
+            this.hot.current.hotInstance.updateSettings({})
         } finally {
             if (this.props.afterColumnMove && this.initialized) {
                 this.props.afterColumnMove(columns, target)
@@ -203,7 +200,7 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
         this.debug('after column resize', column, width, isDoubleClick)
 
         try {
-            this.hot.hotInstance.updateSettings({})
+            this.hot.current.hotInstance.updateSettings({})
         } finally {
             if (this.props.afterColumnResize) {
                 this.props.afterColumnResize(column, width, isDoubleClick)
@@ -216,11 +213,7 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
         this.debug('before on cell mouse down', ev, coords, td)
 
         try {
-            if (coords.row < 0) {
-                this.selectingCells = false
-            } else {
-                this.selectingCells = true
-            }
+            this.selectingCells = coords.row >= 0
         } finally {
             if (this.props.beforeOnCellMouseDown) {
                 this.props.beforeOnCellMouseDown(ev, coords, td)
@@ -237,12 +230,12 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
             }
             if (this.props.selectionMode === 'row') {
                 const fromCol = 0
-                const toCol = this.hot.hotInstance.countCols() - 1
-                const selected = this.hot.hotInstance.getSelectedRangeLast()
+                const toCol = this.hot.current.hotInstance.countCols() - 1
+                const selected = this.hot.current.hotInstance.getSelectedRangeLast()
                 if (r1 === selected.from.row && c1 === fromCol && r2 === selected.to.row && c2 === toCol) {
                     return
                 }
-                this.hot.hotInstance.selectRows(r1, r2)
+                this.hot.current.hotInstance.selectRows(r1, r2)
             }
         } finally {
             if (this.props.afterSelection) {
@@ -251,40 +244,20 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
         }
     }
 
-    afterScrollHorizontally() {
-        try {
-            this.hot.hotInstance.updateSettings({})
-        } finally {
-            if (this.props.afterScrollHorizontally) {
-                this.props.afterScrollHorizontally()
-            }
-        }
-    }
-
-    afterScrollVertically() {
-        try {
-            this.hot.hotInstance.updateSettings({})
-        } finally {
-            if (this.props.afterScrollVertically) {
-                this.props.afterScrollVertically()
-            }
-        }
-    }
-
     afterUpdateSettings(settings: any) {
         try {
             requestAnimationFrame(() => {
-                const tables = this.hot.hotInstance.rootElement.querySelectorAll('.htCore')
+                const tables = this.hot.current.hotInstance.rootElement.querySelectorAll('.htCore')
                 const elementOffset = this.props.rowHeaders ? 2 : 1
-                const viewportOffset = this.hot.hotInstance.colOffset()
+                const viewportOffset = this.hot.current.hotInstance.colOffset()
 
-                const countCols = this.hot.hotInstance.countCols()
+                const countCols = this.hot.current.hotInstance.countCols()
                 const range = Array.from({length: countCols}, (v: any, k: number): number => k)
 
                 range.forEach((column: number) => {
 
                     const hidden = this.state.hiddenColumns.some((hidden: number): boolean => {
-                        const visual = this.hot.hotInstance.toVisualColumn(hidden)
+                        const visual = this.hot.current.hotInstance.toVisualColumn(hidden)
                         return visual === column
                     })
 
@@ -330,7 +303,7 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
                 return
             }
 
-            const physical = this.hot.hotInstance.toPhysicalColumn(column)
+            const physical = this.hot.current.hotInstance.toPhysicalColumn(column)
             const active = this.props.rowFilter && this.props.rowFilter.expressions.some((expression: PhysicalToExpression): boolean => {
                 return expression.physical === physical
             })
@@ -389,7 +362,7 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
             newState.hiddenColumns = nextProps.hiddenColumns
         }
         this.setState(newState)
-        this.hot.hotInstance.updateSettings({})
+        this.hot.current.hotInstance.updateSettings({})
     }
 
     componentDidUpdate() {
@@ -402,11 +375,7 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
         const props = Object.assign({}, this.props)
 
         return (
-            <HotTable ref={hot => {
-                if (hot) {
-                    this.hot = hot
-                }
-            }}
+            <HotTable ref={this.hot}
                       {...props}
                       data={this.state.data}
                       startCols={this.state.columns.length}
@@ -420,8 +389,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
                       afterColumnResize={this.afterColumnResize.bind(this)}
                       beforeOnCellMouseDown={this.beforeOnCellMouseDown.bind(this)}
                       afterSelection={this.afterSelection.bind(this)}
-                      afterScrollHorizontally={debounce(this.afterScrollHorizontally.bind(this), 100)}
-                      afterScrollVertically={debounce(this.afterScrollVertically.bind(this), 100)}
                       afterUpdateSettings={this.afterUpdateSettings.bind(this)}/>
         )
     }
@@ -437,15 +404,15 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
     }
 
     hotInstance(): Handsontable {
-        return this.hot.hotInstance
+        return this.hot.current.hotInstance
     }
 
     initializeHotTable() {
-        if (!this.hot || !this.hot.hotInstance) {
+        if (!this.hot || !this.hot.current.hotInstance) {
             return
         }
 
-        const plugin = this.hot.hotInstance.getPlugin('ManualColumnMove')
+        const plugin = this.hot.current.hotInstance.getPlugin('ManualColumnMove')
         this.debug('plugin?', !!plugin)
 
         if (plugin) {
@@ -457,7 +424,7 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
             }).sort((a: { physical: number, visual: number }, b: { physical: number, visual: number }): number => {
                 return a.visual - b.visual
             }).forEach((element: { physical: number, visual: number }) => {
-                const visual = this.hot.hotInstance.toVisualColumn(element.physical)
+                const visual = this.hot.current.hotInstance.toVisualColumn(element.physical)
                 const target = element.visual
                 plugin.moveColumn(visual, target)
             })
