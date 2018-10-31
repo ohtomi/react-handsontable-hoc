@@ -1,13 +1,12 @@
-import {configure} from '@storybook/react';
-import 'handsontable/dist/handsontable.full.css';
+import {configure} from '@storybook/react'
 
 function loadStories() {
-    require('../stories/Basic');
-    require('../stories/Callback');
-    require('../stories/RowFilter');
-    require('../stories/SelectionMode');
-    require('../stories/Viewport');
-    require('../stories/CustomRenderer');
+    require('../src/stories/Basic')
+    require('../src/stories/Callback')
+    require('../src/stories/RowFilter')
+    require('../src/stories/SelectionMode')
+    require('../src/stories/Viewport')
+    require('../src/stories/CustomRenderer')
 }
 
-configure(loadStories, module);
+configure(loadStories, module)

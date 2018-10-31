@@ -1,8 +1,8 @@
-import React from 'react';
-import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import React from 'react'
+import {storiesOf} from '@storybook/react'
+import {action} from '@storybook/addon-actions'
 
-import {HotTableContainer} from '../src/index';
+import {HotTableContainer} from '../lib'
 
 
 const data = [
@@ -18,7 +18,7 @@ const data = [
     {'id': 32, 'name': 'toyota', 'year': 2017, 'volume': 1000, 'processed': true},
     {'id': 33, 'name': 'toyota', 'year': 2018, 'volume': 1000, 'processed': true},
     {'id': 41, 'name': 'honda', 'year': 2015, 'volume': 1000, 'processed': true}
-];
+]
 
 const columns = [
     {data: 'id', type: 'numeric', width: 150, readOnly: true},
@@ -26,9 +26,9 @@ const columns = [
     {data: 'year', type: 'numeric', width: 150, readOnly: true},
     {data: 'volume', type: 'numeric', width: 150, readOnly: true},
     {data: data => data.processed ? 'Yes' : 'No', type: 'text', width: 150, readOnly: true}
-];
+]
 
-const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?'];
+const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
 storiesOf('Basic', module)
     .add('plain', () => {
@@ -40,10 +40,10 @@ storiesOf('Basic', module)
                 columnSorting={true} sortIndicator={true}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
-        );
+        )
     })
     .add('move column', () => {
-        const columnMapping = [0, 3, 4, 1, 2];
+        const columnMapping = [0, 3, 4, 1, 2]
 
         return (
             <HotTableContainer
@@ -53,11 +53,11 @@ storiesOf('Basic', module)
                 columnSorting={true} sortIndicator={true}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
-        );
+        )
     })
     .add('hide column', () => {
-        const columnMapping = [0, 3, 4, 1, 2];
-        const hiddenColumns = [3];
+        const columnMapping = [0, 3, 4, 1, 2]
+        const hiddenColumns = [3]
 
         return (
             <HotTableContainer
@@ -67,15 +67,15 @@ storiesOf('Basic', module)
                 columnSorting={true} sortIndicator={true}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
-        );
+        )
     })
     .add('sort column', () => {
         const columnSorting = {
             column: 4,
             sortOrder: false
-        };
-        const columnMapping = [0, 3, 4, 1, 2];
-        const hiddenColumns = [3];
+        }
+        const columnMapping = [0, 3, 4, 1, 2]
+        const hiddenColumns = [3]
 
         return (
             <HotTableContainer
@@ -85,15 +85,15 @@ storiesOf('Basic', module)
                 columnSorting={columnSorting} sortIndicator={true}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
-        );
+        )
     })
     .add('with row header', () => {
         const columnSorting = {
             column: 4,
             sortOrder: false
-        };
-        const columnMapping = [0, 3, 4, 1, 2];
-        const hiddenColumns = [3];
+        }
+        const columnMapping = [0, 3, 4, 1, 2]
+        const hiddenColumns = [3]
 
         return (
             <HotTableContainer
@@ -103,5 +103,5 @@ storiesOf('Basic', module)
                 columnSorting={columnSorting} sortIndicator={true}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
-        );
-    });
+        )
+    })

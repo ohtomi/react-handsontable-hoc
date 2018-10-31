@@ -26,7 +26,7 @@ render() {
         {'id': 32, 'name': 'toyota', 'year': 2017, 'volume': 1000, 'processed': true},
         {'id': 33, 'name': 'toyota', 'year': 2018, 'volume': 1000, 'processed': true},
         {'id': 41, 'name': 'honda', 'year': 2015, 'volume': 1000, 'processed': true}
-    ];
+    ]
 
     const columns = [
         {data: 'id', type: 'numeric', width: 150, readOnly: true},
@@ -34,21 +34,21 @@ render() {
         {data: 'year', type: 'numeric', width: 150, readOnly: true},
         {data: 'volume', type: 'numeric', width: 150, readOnly: true},
         {data: data => data.processed ? 'Yes' : 'No', type: 'text', width: 150, readOnly: true}
-    ];
+    ]
 
-    const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?'];
+    const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
     // column order: ID, YEAR, VOLUME, PROCESSED?, NAME
-    const columnMapping = [0, 2, 3, 4, 1];
+    const columnMapping = [0, 2, 3, 4, 1]
 
     // VOLUME is hidden
-    const hiddenColumns = [3];
+    const hiddenColumns = [3]
 
     // sort by NAME
     const columnSorting = {
         column: 4,
         sortOrder: false
-    };
+    }
 
     // filter by NAME
     const filter = new RowFilter([
@@ -59,7 +59,7 @@ render() {
                 props: ['ford', 'volvo']
             })
         }
-    ]);
+    ])
 
     return (
         <HotTableContainer
@@ -70,7 +70,7 @@ render() {
             manualColumnMove={true}
             manualColumnResize={true}
             rowFilter={filter}/>
-    );
+    )
 }
 ```
 

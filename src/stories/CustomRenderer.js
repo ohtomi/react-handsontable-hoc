@@ -1,8 +1,8 @@
-import React from 'react';
-import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import React from 'react'
+import {storiesOf} from '@storybook/react'
+import {action} from '@storybook/addon-actions'
 
-import {HotTableContainer} from '../src/index';
+import {HotTableContainer} from '../lib'
 
 
 const data = [
@@ -102,19 +102,19 @@ const data = [
         'volume': 1000,
         'processed': true
     }
-];
+]
 
 const imageRenderer = (instance, td, row, col, prop, value, cellProperties) => {
-    if (td.children.length) return td;
+    if (td.children.length) return td
 
-    const img = document.createElement('img');
-    img.src = value;
-    img.width = '145';
+    const img = document.createElement('img')
+    img.src = value
+    img.width = '145'
 
-    td.appendChild(img);
+    td.appendChild(img)
 
-    return td;
-};
+    return td
+}
 
 const columns = [
     {data: 'id', type: 'numeric', width: 150, readOnly: true},
@@ -123,9 +123,9 @@ const columns = [
     {data: 'year', type: 'numeric', width: 150, readOnly: true},
     {data: 'volume', type: 'numeric', width: 150, readOnly: true},
     {data: data => data.processed ? 'Yes' : 'No', type: 'text', width: 150, readOnly: true}
-];
+]
 
-const colHeaders = ['ID', 'LOGO', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?'];
+const colHeaders = ['ID', 'LOGO', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
 storiesOf('CustomRenderer', module)
     .add('plain', () => {
@@ -137,5 +137,5 @@ storiesOf('CustomRenderer', module)
                 columnSorting={true} sortIndicator={true}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
-        );
-    });
+        )
+    })
