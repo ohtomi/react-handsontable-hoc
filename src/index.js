@@ -1,6 +1,6 @@
 import React from 'react'
 import {render} from 'react-dom'
-import {HotTableContainer, RowFilter, Expressions} from './lib'
+import {Expressions, HotTableContainer, RowFilter} from './lib'
 
 const data = [
     {'id': 11, 'name': 'ford', 'year': 2015, 'volume': 1000, 'processed': true},
