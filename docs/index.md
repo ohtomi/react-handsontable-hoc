@@ -45,9 +45,6 @@ class Demo extends React.Component {
     
         const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?'];
     
-        // column order: ID, YEAR, VOLUME, PROCESSED?, NAME
-        const columnMapping = [0, 2, 3, 4, 1];
-    
         // VOLUME is hidden
         const hiddenColumns = [3];
     
@@ -72,8 +69,8 @@ class Demo extends React.Component {
             <HotTableContainer
                 width="800" height="300"
                 data={data} columns={columns} colHeaders={colHeaders}
-                columnMapping={columnMapping} hiddenColumns={hiddenColumns}
-                columnSorting={columnSorting} sortIndicator={true}
+                hiddenColumns={hiddenColumns}
+                columnSorting={columnSorting}
                 manualColumnMove={true}
                 manualColumnResize={true}
                 rowFilter={filter}/>

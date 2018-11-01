@@ -37,34 +37,20 @@ storiesOf('Basic', module)
                 mode="debug" logger={action('debug')}
                 data={data} columns={columns} colHeaders={colHeaders}
                 width="800" height="250"
-                columnSorting={true} sortIndicator={true}
-                manualColumnMove={true}
-                manualColumnResize={true}/>
-        )
-    })
-    .add('move column', () => {
-        const columnMapping = [0, 3, 4, 1, 2]
-
-        return (
-            <HotTableContainer
-                mode="debug" logger={action('debug')} columnMapping={columnMapping}
-                data={data} columns={columns} colHeaders={colHeaders}
-                width="800" height="250"
-                columnSorting={true} sortIndicator={true}
+                columnSorting={true}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
         )
     })
     .add('hide column', () => {
-        const columnMapping = [0, 3, 4, 1, 2]
         const hiddenColumns = [3]
 
         return (
             <HotTableContainer
-                mode="debug" logger={action('debug')} columnMapping={columnMapping} hiddenColumns={hiddenColumns}
+                mode="debug" logger={action('debug')} hiddenColumns={hiddenColumns}
                 data={data} columns={columns} colHeaders={colHeaders}
                 width="800" height="250"
-                columnSorting={true} sortIndicator={true}
+                columnSorting={true}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
         )
@@ -74,15 +60,14 @@ storiesOf('Basic', module)
             column: 4,
             sortOrder: 'desc'
         }
-        const columnMapping = [0, 3, 4, 1, 2]
         const hiddenColumns = [3]
 
         return (
             <HotTableContainer
-                mode="debug" logger={action('debug')} columnMapping={columnMapping} hiddenColumns={hiddenColumns}
+                mode="debug" logger={action('debug')} hiddenColumns={hiddenColumns}
                 data={data} columns={columns} colHeaders={colHeaders}
                 width="800" height="250"
-                columnSorting={columnSorting} sortIndicator={true}
+                columnSorting={columnSorting}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
         )
@@ -92,15 +77,14 @@ storiesOf('Basic', module)
             column: 4,
             sortOrder: 'desc'
         }
-        const columnMapping = [0, 3, 4, 1, 2]
         const hiddenColumns = [3]
 
         return (
             <HotTableContainer
-                mode="debug" logger={action('debug')} columnMapping={columnMapping} hiddenColumns={hiddenColumns}
+                mode="debug" logger={action('debug')} hiddenColumns={hiddenColumns}
                 data={data} columns={columns} colHeaders={colHeaders} rowHeaders={true}
                 width="800" height="250"
-                columnSorting={columnSorting} sortIndicator={true}
+                columnSorting={columnSorting}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
         )

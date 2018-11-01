@@ -17,12 +17,9 @@ type propsType = {
     data: Array<any>,
     columns: Array<Column>,
     rowHeaders?: boolean,
-    columnSorting?: ColumnSorting | null,
-    columnMapping?: Array<number>,
+    columnSorting?: ColumnSorting,
     hiddenColumns?: Array<number>,
     selectionMode?: 'cell' | 'row',
-    afterColumnSort?: (currentSortConfig: Array<ColumnSortingObject>, destinationSortConfigs: Array<ColumnSortingObject>) => void,
-    beforeColumnMove?: (columns: Array<number>, target: number) => void,
     beforeOnCellMouseDown?: (ev: MouseEvent, coords: { row: number }, td: HTMLElement) => void,
     afterSelection?: (r1: number, c1: number, r2: number, c2: number, preventScrolling: { value: boolean }) => void,
     afterUpdateSettings?: (settings: any) => void,
@@ -36,7 +33,6 @@ type stateType = {
     maxRows: number,
     columns: Array<Column>,
     columnSorting: ColumnSorting,
-    columnMapping: Array<number>,
     hiddenColumns: Array<number>
 };
 
@@ -45,7 +41,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
     props: propsType
     state: stateType
 
-    initialized: boolean
     selectingCells: boolean
     hot: { current: { hotInstance: Handsontable } }
 
@@ -69,7 +64,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
             }
         })
         const columnSorting = props.columnSorting || false
-        const columnMapping = props.columnMapping || []
         const hiddenColumns = props.hiddenColumns || []
 
         this.state = {
@@ -77,7 +71,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
             maxRows: filtered.length,
             columns: columns,
             columnSorting: columnSorting,
-            columnMapping: columnMapping,
             hiddenColumns: hiddenColumns
         }
     }
@@ -88,81 +81,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
             data: filtered.length ? filtered : null,
             maxRows: filtered.length
         })
-    }
-
-    afterColumnSort(currentSortConfigs: Array<ColumnSortingObject>, destinationSortConfigs: Array<ColumnSortingObject>) {
-        // currentSortConfigs is Current sort configuration (for all sorted columns).
-        // destinationSortConfigs is Destination sort configuration (for all sorted columns).
-        this.debug('after column sort', currentSortConfigs, destinationSortConfigs)
-
-        try {
-            if (destinationSortConfigs.length) {
-                if (this.state.columnSorting.column !== destinationSortConfigs[0].column || this.state.columnSorting.sortOrder !== destinationSortConfigs[0].sortOrder) {
-                    this.setState({columnSorting: destinationSortConfigs[0]})
-                }
-            } else {
-                this.setState({columnSorting: true})
-            }
-        } finally {
-            if (this.props.afterColumnSort) {
-                this.props.afterColumnSort(column, sortOrder)
-            }
-        }
-    }
-
-    beforeColumnMove(columns: Array<number>, target: number) {
-        // columns are an array of visual column indexes.
-        // target is visual column index.
-        this.debug('before column move', `[${columns.join(', ')}]`, target)
-
-        try {
-            if (!this.state.columnSorting) {
-                return
-            }
-
-            if (typeof this.state.columnSorting === 'object') {
-                const columnSorting: ColumnSortingObject = this.state.columnSorting
-                const from = columns[0]
-                const to = columns[columns.length - 1]
-
-                if (columnSorting.column < from && columnSorting.column < target) {
-                    return
-                }
-                if (columnSorting.column > to && columnSorting.column > target) {
-                    return
-                }
-
-                const rangeLength = to < target ? target : to + 1
-                const range = Array.from({length: rangeLength}, (v: any, k: number): number => k)
-
-                if (to < target) {
-                    range.splice(target, 0, ...range.slice(from, to + 1))
-                    range.splice(from, to + 1 - from)
-                } else if (from > target) {
-                    range.splice(target, 0, ...range.splice(from, to + 1 - from))
-                }
-                this.debug('range', `[${range.join(', ')}]`)
-
-                let newSortIndex = columnSorting.column
-                range.forEach((column: number, index: number) => {
-                    if (column === columnSorting.column) {
-                        newSortIndex = index
-                    }
-                })
-                this.debug('sort index', `${columnSorting.column} -> ${newSortIndex}`)
-
-                this.setState({
-                    columnSorting: {
-                        column: newSortIndex,
-                        sortOrder: columnSorting.sortOrder
-                    }
-                })
-            }
-        } finally {
-            if (this.props.beforeColumnMove && this.initialized) {
-                this.props.beforeColumnMove(columns, target)
-            }
-        }
     }
 
     beforeOnCellMouseDown(ev: MouseEvent, coords: { row: number }, td: HTMLElement) {
@@ -286,7 +204,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
     }
 
     componentDidMount() {
-        this.initializeHotTable()
     }
 
     UNSAFE_componentWillReceiveProps(nextProps: propsType) {
@@ -314,9 +231,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
     }
 
     componentDidUpdate() {
-        if (!this.initialized) {
-            this.initializeHotTable()
-        }
     }
 
     render() {
@@ -330,8 +244,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
                       maxRows={this.state.maxRows}
                       columns={this.state.columns}
                       columnSorting={{initialConfig: this.state.columnSorting}}
-                      afterColumnSort={this.afterColumnSort.bind(this)}
-                      beforeColumnMove={this.beforeColumnMove.bind(this)}
                       beforeOnCellMouseDown={this.beforeOnCellMouseDown.bind(this)}
                       afterSelection={this.afterSelection.bind(this)}
                       afterUpdateSettings={this.afterUpdateSettings.bind(this)}/>
@@ -350,31 +262,5 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
 
     hotInstance(): Handsontable {
         return this.hot.current.hotInstance
-    }
-
-    initializeHotTable() {
-        if (!this.hot || !this.hot.current.hotInstance) {
-            return
-        }
-
-        const plugin = this.hot.current.hotInstance.getPlugin('ManualColumnMove')
-        this.debug('plugin?', !!plugin)
-
-        if (plugin) {
-            /**
-             * move columns according to this.state.columnMapping
-             */
-            this.state.columnMapping.map((element: number, index: number): { physical: number, visual: number } => {
-                return {physical: element, visual: index}
-            }).sort((a: { physical: number, visual: number }, b: { physical: number, visual: number }): number => {
-                return a.visual - b.visual
-            }).forEach((element: { physical: number, visual: number }) => {
-                const visual = this.hot.current.hotInstance.toVisualColumn(element.physical)
-                const target = element.visual
-                plugin.moveColumn(visual, target)
-            })
-
-            this.initialized = true
-        }
     }
 }

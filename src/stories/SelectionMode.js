@@ -37,7 +37,7 @@ storiesOf('SelectionMode', module)
                 mode="debug" logger={action('debug')}
                 data={data} columns={columns} colHeaders={colHeaders} selectionMode="cell"
                 width="800" height="250"
-                columnSorting={true} sortIndicator={true}
+                columnSorting={true}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
         )
@@ -48,7 +48,7 @@ storiesOf('SelectionMode', module)
                 mode="debug" logger={action('debug')}
                 data={data} columns={columns} colHeaders={colHeaders} selectionMode="row"
                 width="800" height="250"
-                columnSorting={true} sortIndicator={true}
+                columnSorting={true}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
         )

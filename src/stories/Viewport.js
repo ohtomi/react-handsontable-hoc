@@ -39,29 +39,27 @@ const colHeaders = Array.from({length: cols}).map((v2, k2) => {
 
 storiesOf('Viewport', module)
     .add('plain', () => {
-        const columnMapping = Array.from({length: cols}).map((v, k) => k)
         const hiddenColumns = []
 
         return (
             <HotTableContainer
-                mode="debug" logger={action('debug')} columnMapping={columnMapping} hiddenColumns={hiddenColumns}
+                mode="debug" logger={action('debug')} hiddenColumns={hiddenColumns}
                 data={data} columns={columns} colHeaders={colHeaders}
                 width="800" height="250"
-                columnSorting={true} sortIndicator={true}
+                columnSorting={true}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
         )
     })
     .add('hide column', () => {
-        const columnMapping = Array.from({length: cols}).map((v, k) => k)
         const hiddenColumns = [1, 3]
 
         return (
             <HotTableContainer
-                mode="debug" logger={action('debug')} columnMapping={columnMapping} hiddenColumns={hiddenColumns}
+                mode="debug" logger={action('debug')} hiddenColumns={hiddenColumns}
                 data={data} columns={columns} colHeaders={colHeaders}
                 width="800" height="250"
-                columnSorting={true} sortIndicator={true}
+                columnSorting={true}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
         )

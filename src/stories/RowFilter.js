@@ -69,7 +69,7 @@ storiesOf('Row Filter', module)
                     mode="debug" logger={action('debug')}
                     data={data} columns={columns} colHeaders={colHeaders}
                     width="800" height="250"
-                    columnSorting={true} sortIndicator={true}
+                    columnSorting={true}
                     manualColumnMove={true}
                     manualColumnResize={true}
                     rowFilter={filter}

@@ -37,7 +37,7 @@ storiesOf('Callback', module)
                 mode="debug" logger={action('debug')}
                 data={data} columns={columns} colHeaders={colHeaders}
                 width="800" height="250"
-                columnSorting={true} sortIndicator={true}
+                columnSorting={true}
                 manualColumnMove={true}
                 manualColumnResize={true}
                 afterColumnSort={action('<afterColumnSort>')}
