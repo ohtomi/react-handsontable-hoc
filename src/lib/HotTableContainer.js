@@ -4,7 +4,7 @@ import React from 'react'
 import Handsontable from 'handsontable'
 import {HotTable} from '@handsontable/react'
 
-import type {Column, ColumnSorting, ColumnSortingObject} from './HandsontableTypes'
+import type {Column} from './HandsontableTypes'
 import type {PhysicalToExpression, Reevaluator} from './RowFilter'
 import {RowFilter} from './RowFilter'
 
@@ -17,8 +17,6 @@ type propsType = {
     data: Array<any>,
     columns: Array<Column>,
     rowHeaders?: boolean,
-    columnSorting?: ColumnSorting,
-    hiddenColumns?: Array<number>,
     selectionMode?: 'cell' | 'row',
     beforeOnCellMouseDown?: (ev: MouseEvent, coords: { row: number }, td: HTMLElement) => void,
     afterSelection?: (r1: number, c1: number, r2: number, c2: number, preventScrolling: { value: boolean }) => void,
@@ -30,10 +28,7 @@ type propsType = {
 
 type stateType = {
     data: ?Array<any>,
-    maxRows: number,
-    columns: Array<Column>,
-    columnSorting: ColumnSorting,
-    hiddenColumns: Array<number>
+    maxRows: number
 };
 
 export class HotTableContainer extends React.Component<propsType, stateType> {
@@ -55,23 +50,10 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
         }
 
         const filtered = props.rowFilter ? props.rowFilter.evaluate(props.data, props.columns) : props.data
-        const columns = props.columns.map((column: Column, index: number): Column => {
-            const hidden = (props.hiddenColumns || []).some((hidden: number): boolean => hidden === index)
-            if (hidden) {
-                return Object.assign({}, column, {width: () => 1e-20})
-            } else {
-                return column
-            }
-        })
-        const columnSorting = props.columnSorting || false
-        const hiddenColumns = props.hiddenColumns || []
 
         this.state = {
             data: filtered.length ? filtered : null,
-            maxRows: filtered.length,
-            columns: columns,
-            columnSorting: columnSorting,
-            hiddenColumns: hiddenColumns
+            maxRows: filtered.length
         }
     }
 
@@ -125,38 +107,23 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
             const elementOffset = this.props.rowHeaders ? 2 : 1
             const viewportOffset = this.hot.current.hotInstance.colOffset()
 
+            const manualColumnResize = this.hot.current.hotInstance.getSettings().manualColumnResize
+            const hiddenColumns = (manualColumnResize && Array.isArray(manualColumnResize)) ?
+                manualColumnResize.map((width, logical) => (width && width >= 20) ? -1 : logical).filter(logical => logical >= 0) : []
+
             const countCols = this.hot.current.hotInstance.countCols()
             const range = Array.from({length: countCols}, (v: any, k: number): number => k)
 
             range.forEach((column: number) => {
 
-                const hidden = this.state.hiddenColumns.some((hidden: number): boolean => {
+                const hidden = hiddenColumns.some((hidden: number): boolean => {
                     const visual = this.hot.current.hotInstance.toVisualColumn(hidden)
                     return visual === column
                 })
 
                 tables.forEach((table: HTMLElement) => {
-                    table.querySelectorAll(`col:nth-child(${column + elementOffset - viewportOffset})`).forEach((cell: HTMLElement) => {
-                        if (hidden) {
-                            cell.classList.add('hidden')
-                        } else {
-                            cell.classList.remove('hidden')
-                        }
-                    })
                     table.querySelectorAll(`th:nth-child(${column + elementOffset - viewportOffset})`).forEach((cell: HTMLElement) => {
-                        if (hidden) {
-                            cell.classList.add('hidden')
-                        } else {
-                            cell.classList.remove('hidden')
-                        }
                         this.addRowFilterIndicator(column, cell, hidden)
-                    })
-                    table.querySelectorAll(`td:nth-child(${column + elementOffset - viewportOffset})`).forEach((cell: HTMLElement) => {
-                        if (hidden) {
-                            cell.classList.add('hidden')
-                        } else {
-                            cell.classList.remove('hidden')
-                        }
                     })
                 })
             })
@@ -216,17 +183,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
         if (nextProps.data !== this.props.data || nextProps.rowFilter !== this.props.rowFilter) {
             newState.data = nextProps.rowFilter ? nextProps.rowFilter.evaluate(nextProps.data, nextProps.columns) : nextProps.data
         }
-        if (nextProps.hiddenColumns !== this.props.hiddenColumns) {
-            newState.columns = nextProps.columns.map((column: Column, index: number): Column => {
-                const hidden = (nextProps.hiddenColumns || []).some((hidden: number): boolean => hidden === index)
-                if (hidden) {
-                    return Object.assign({}, column, {width: 1e-20})
-                } else {
-                    return column
-                }
-            })
-            newState.hiddenColumns = nextProps.hiddenColumns
-        }
         this.setState(newState)
     }
 
@@ -234,16 +190,12 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
     }
 
     render() {
-        const props = Object.assign({}, this.props)
-
         return (
             <HotTable ref={this.hot}
-                      {...props}
+                      {...this.props}
                       data={this.state.data}
-                      startCols={this.state.columns.length}
+                      startCols={this.props.columns.length}
                       maxRows={this.state.maxRows}
-                      columns={this.state.columns}
-                      columnSorting={{initialConfig: this.state.columnSorting}}
                       beforeOnCellMouseDown={this.beforeOnCellMouseDown.bind(this)}
                       afterSelection={this.afterSelection.bind(this)}
                       afterUpdateSettings={this.afterUpdateSettings.bind(this)}/>
