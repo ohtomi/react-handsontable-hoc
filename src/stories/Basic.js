@@ -42,7 +42,7 @@ storiesOf('Basic', module)
                 manualColumnResize={true}/>
         )
     })
-    .add('initial sort by year', () => {
+    .add('initial sort', () => {
         const columnSorting = {
             initialConfig: {
                 column: 2,
@@ -56,17 +56,6 @@ storiesOf('Basic', module)
                 data={data} columns={columns} colHeaders={colHeaders}
                 width="800" height="250"
                 columnSorting={columnSorting}
-                manualColumnMove={true}
-                manualColumnResize={true}/>
-        )
-    })
-    .add('row header', () => {
-        return (
-            <HotTableContainer
-                mode="debug" logger={action('debug')}
-                data={data} columns={columns} colHeaders={colHeaders} rowHeaders={true}
-                width="800" height="250"
-                columnSorting={true}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
         )

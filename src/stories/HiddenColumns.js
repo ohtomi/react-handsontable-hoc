@@ -43,10 +43,7 @@ class App extends React.Component {
 
     onClick(ev) {
         const plugin = getHiddenColumnsPlugin(this.ref.current.hotInstance())
-        const hiddenColumns = []
-        if (!this.state.hiddenColumns.length) {
-            hiddenColumns[0] = 3
-        }
+        const hiddenColumns = this.state.hiddenColumns.length ? [] : [3]
         plugin.hideColumns(hiddenColumns)
         this.setState({hiddenColumns})
     }
