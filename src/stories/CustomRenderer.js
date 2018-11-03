@@ -127,7 +127,7 @@ const columns = [
 
 const colHeaders = ['ID', 'LOGO', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
-storiesOf('CustomRenderer', module)
+storiesOf('Custom Renderer', module)
     .add('plain', () => {
         return (
             <HotTableContainer

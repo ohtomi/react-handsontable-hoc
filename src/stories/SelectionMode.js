@@ -30,7 +30,7 @@ const columns = [
 
 const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
-storiesOf('SelectionMode', module)
+storiesOf('Selection Mode', module)
     .add('cell', () => {
         return (
             <HotTableContainer

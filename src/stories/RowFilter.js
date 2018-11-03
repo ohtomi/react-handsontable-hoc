@@ -74,7 +74,8 @@ storiesOf('Row Filter', module)
                     manualColumnResize={true}
                     rowFilter={filter}
                     onClickRowFilterIndicator={action('onClickRowFilterIndicator')}/>
-                <label>NAME: <input type="text" onChange={onChange} autoFocus={true}/></label>
+                <hr/>
+                <label>filter by name: <input type="text" onChange={onChange} autoFocus={true}/></label>
             </div>
         )
     })

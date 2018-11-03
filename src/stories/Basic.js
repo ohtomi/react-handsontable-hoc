@@ -42,29 +42,17 @@ storiesOf('Basic', module)
                 manualColumnResize={true}/>
         )
     })
-    .add('hide column', () => {
-        const hiddenColumns = [3]
-
-        return (
-            <HotTableContainer
-                mode="debug" logger={action('debug')} hiddenColumns={hiddenColumns}
-                data={data} columns={columns} colHeaders={colHeaders}
-                width="800" height="250"
-                columnSorting={true}
-                manualColumnMove={true}
-                manualColumnResize={true}/>
-        )
-    })
-    .add('sort column', () => {
+    .add('initial sort by year', () => {
         const columnSorting = {
-            column: 4,
-            sortOrder: 'desc'
+            initialConfig: {
+                column: 2,
+                sortOrder: 'desc'
+            }
         }
-        const hiddenColumns = [3]
 
         return (
             <HotTableContainer
-                mode="debug" logger={action('debug')} hiddenColumns={hiddenColumns}
+                mode="debug" logger={action('debug')}
                 data={data} columns={columns} colHeaders={colHeaders}
                 width="800" height="250"
                 columnSorting={columnSorting}
@@ -72,19 +60,13 @@ storiesOf('Basic', module)
                 manualColumnResize={true}/>
         )
     })
-    .add('with row header', () => {
-        const columnSorting = {
-            column: 4,
-            sortOrder: 'desc'
-        }
-        const hiddenColumns = [3]
-
+    .add('row header', () => {
         return (
             <HotTableContainer
-                mode="debug" logger={action('debug')} hiddenColumns={hiddenColumns}
+                mode="debug" logger={action('debug')}
                 data={data} columns={columns} colHeaders={colHeaders} rowHeaders={true}
                 width="800" height="250"
-                columnSorting={columnSorting}
+                columnSorting={true}
                 manualColumnMove={true}
                 manualColumnResize={true}/>
         )
