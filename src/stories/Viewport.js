@@ -6,7 +6,7 @@ import {HotTableContainer} from '../lib'
 
 
 const rows = 50
-const cols = 15
+const cols = 20
 
 
 const data = Array.from({length: rows}).map((v1, k1) => {
@@ -27,7 +27,7 @@ const columns = Array.from({length: cols}).map((v2, k2) => {
     return {
         data: columnName,
         type: 'text',
-        width: 100,
+        width: k2 !== 1 && k2 !== 3 && k2 !== 5 ? 100 : 1e-20,
         readOnly: true,
         wordWrap: false
     }
@@ -39,24 +39,9 @@ const colHeaders = Array.from({length: cols}).map((v2, k2) => {
 
 storiesOf('Viewport', module)
     .add('plain', () => {
-        const hiddenColumns = []
-
         return (
             <HotTableContainer
-                mode="debug" logger={action('debug')} hiddenColumns={hiddenColumns}
-                data={data} columns={columns} colHeaders={colHeaders}
-                width="800" height="250"
-                columnSorting={true}
-                manualColumnMove={true}
-                manualColumnResize={true}/>
-        )
-    })
-    .add('hide column', () => {
-        const hiddenColumns = [1, 3]
-
-        return (
-            <HotTableContainer
-                mode="debug" logger={action('debug')} hiddenColumns={hiddenColumns}
+                mode="debug" logger={action('debug')}
                 data={data} columns={columns} colHeaders={colHeaders}
                 width="800" height="250"
                 columnSorting={true}
