@@ -2,7 +2,7 @@ import React from 'react'
 import {storiesOf} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
 
-import {getHiddenColumnsPlugin, HotTableContainer, RowFilter} from '../lib'
+import {getHiddenColumnsPlugin, registerHiddenColumnsPlugin, HotTableContainer, RowFilter} from '../lib'
 import * as Expressions from '../lib/Expression'
 
 
@@ -138,6 +138,8 @@ class App extends React.Component {
         )
     }
 }
+
+registerHiddenColumnsPlugin()
 
 storiesOf('Viewport', module)
     .add('plain', () => {
