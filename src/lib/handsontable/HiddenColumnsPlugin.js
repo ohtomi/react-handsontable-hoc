@@ -4,7 +4,7 @@ import Handsontable from 'handsontable'
 
 class HiddenColumnsPlugin extends Handsontable.plugins.BasePlugin {
 
-    isEnable() {
+    isEnabled() {
         return !!this.hot.getSettings().manualColumnResize
     }
 
