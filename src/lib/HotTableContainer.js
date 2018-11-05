@@ -17,9 +17,6 @@ type propsType = {
     data: Array<any>,
     columns: Array<Column>,
     rowHeaders?: boolean,
-    selectionMode?: 'cell' | 'row',
-    beforeOnCellMouseDown?: (ev: MouseEvent, coords: { row: number }, td: HTMLElement) => void,
-    afterSelection?: (r1: number, c1: number, r2: number, c2: number, preventScrolling: { value: boolean }) => void,
     afterUpdateSettings?: (settings: any) => void,
     rowFilter?: RowFilter,
     rowFilterIndicatorClassName?: string,
@@ -36,7 +33,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
     props: propsType
     state: stateType
 
-    selectingCells: boolean
     hot: { current: { hotInstance: Handsontable } }
 
     constructor(props: propsType) {
@@ -63,42 +59,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
             data: filtered.length ? filtered : null,
             maxRows: filtered.length
         })
-    }
-
-    beforeOnCellMouseDown(ev: MouseEvent, coords: { row: number }, td: HTMLElement) {
-        // In case the row/column header was clicked, the index is negative.
-        this.debug('before on cell mouse down', ev, coords, td)
-
-        try {
-            this.selectingCells = coords.row >= 0
-        } finally {
-            if (this.props.beforeOnCellMouseDown) {
-                this.props.beforeOnCellMouseDown(ev, coords, td)
-            }
-        }
-    }
-
-    afterSelection(r1: number, c1: number, r2: number, c2: number, preventScrolling: { value: boolean }) {
-        this.debug('after selection', r1, c1, r2, c2, preventScrolling)
-
-        try {
-            if (!this.selectingCells) {
-                return
-            }
-            if (this.props.selectionMode === 'row') {
-                const fromCol = 0
-                const toCol = this.hot.current.hotInstance.countCols() - 1
-                const selected = this.hot.current.hotInstance.getSelectedRangeLast()
-                if (r1 === selected.from.row && c1 === fromCol && r2 === selected.to.row && c2 === toCol) {
-                    return
-                }
-                this.hot.current.hotInstance.selectRows(r1, r2)
-            }
-        } finally {
-            if (this.props.afterSelection) {
-                this.props.afterSelection(r1, c1, r2, c2, preventScrolling)
-            }
-        }
     }
 
     afterUpdateSettings(settings: any) {
@@ -196,8 +156,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
                       data={this.state.data}
                       startCols={this.props.columns.length}
                       maxRows={this.state.maxRows}
-                      beforeOnCellMouseDown={this.beforeOnCellMouseDown.bind(this)}
-                      afterSelection={this.afterSelection.bind(this)}
                       afterUpdateSettings={this.afterUpdateSettings.bind(this)}/>
         )
     }
