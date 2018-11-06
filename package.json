@@ -40,7 +40,7 @@
     "@handsontable/react": "^2.0.0",
     "@storybook/addon-actions": "^4.0.4",
     "@storybook/addon-links": "^4.0.4",
-    "@storybook/react": "^4.0.0",
+    "@storybook/react": "^4.0.4",
     "cross-env": "^5.2.0",
     "flow-bin": "^0.85.0",
     "flow-typed": "^2.2.3",
