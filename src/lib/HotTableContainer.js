@@ -130,10 +130,7 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
         }
     }
 
-    componentDidMount() {
-    }
-
-    UNSAFE_componentWillReceiveProps(nextProps: propsType) {
+    UNSAFE_componentWillReceiveProps(nextProps: Readonly<propsType>, nextContext: any) {
         const reevaluator: Reevaluator = this.evaluateRowFilter.bind(this, nextProps.data, nextProps.columns)
         if (nextProps.rowFilter) {
             nextProps.rowFilter.reevaluator = reevaluator
@@ -144,9 +141,6 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
             newState.data = nextProps.rowFilter ? nextProps.rowFilter.evaluate(nextProps.data, nextProps.columns) : nextProps.data
         }
         this.setState(newState)
-    }
-
-    componentDidUpdate() {
     }
 
     render() {
