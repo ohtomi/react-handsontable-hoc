@@ -2,7 +2,7 @@ import React from 'react'
 import {storiesOf} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
 
-import {getHiddenColumnsPlugin, HotTableContainer, registerHiddenColumnsPlugin} from '../lib'
+import {HotTableContainer, HotTablePlugins} from '../lib'
 
 
 const data = [
@@ -30,6 +30,7 @@ const columns = [
 
 const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
+
 class App extends React.Component {
 
     constructor(props) {
@@ -42,7 +43,7 @@ class App extends React.Component {
     }
 
     onClick(ev) {
-        const plugin = getHiddenColumnsPlugin(this.ref.current.hotInstance())
+        const plugin = HotTablePlugins.HiddenColumnsPlugin.getHiddenColumnsPlugin(this.ref.current.hotInstance())
         const hiddenColumns = this.state.hiddenColumns.length ? [] : [3]
         plugin.hideColumns(hiddenColumns)
         this.setState({hiddenColumns})
@@ -66,7 +67,7 @@ class App extends React.Component {
     }
 }
 
-registerHiddenColumnsPlugin()
+HotTablePlugins.HiddenColumnsPlugin.registerHiddenColumnsPlugin()
 
 storiesOf('Hidden Columns', module)
     .add('plain', () => {

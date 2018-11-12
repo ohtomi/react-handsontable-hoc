@@ -2,7 +2,7 @@ import React from 'react'
 import {storiesOf} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
 
-import {HotTableContainer, registerRowSelectionPlugin, getRowSelectionPlugin} from '../lib'
+import {HotTableContainer, HotTablePlugins} from '../lib'
 
 
 const data = [
@@ -30,7 +30,7 @@ const columns = [
 
 const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
-registerRowSelectionPlugin()
+HotTablePlugins.RowSelectionPlugin.registerRowSelectionPlugin()
 
 storiesOf('Selection Mode', module)
     .add('cell', () => {

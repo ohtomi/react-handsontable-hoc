@@ -2,7 +2,7 @@ import React from 'react'
 import {storiesOf} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
 
-import {getHiddenColumnsPlugin, HotTableContainer, registerHiddenColumnsPlugin, registerRowSelectionPlugin, RowFilter} from '../lib'
+import {HotTableContainer, HotTablePlugins, RowFilter} from '../lib'
 import * as Expressions from '../lib/Expression'
 
 
@@ -83,6 +83,7 @@ const h2Renderer = (instance, td, row, col, prop, value, cellProperties) => {
 
 columns[0].renderer = h2Renderer
 
+
 class App extends React.Component {
 
     constructor(props) {
@@ -96,7 +97,7 @@ class App extends React.Component {
     }
 
     onClick1(ev) {
-        const plugin = getHiddenColumnsPlugin(this.ref.current.hotInstance())
+        const plugin = HotTablePlugins.HiddenColumnsPlugin.getHiddenColumnsPlugin(this.ref.current.hotInstance())
         const hiddenColumns = this.state.hiddenColumns.length ? [] : [1, 3, 5, 7, 9]
         plugin.hideColumns(hiddenColumns)
         this.setState({hiddenColumns})
@@ -139,8 +140,7 @@ class App extends React.Component {
     }
 }
 
-registerHiddenColumnsPlugin()
-registerRowSelectionPlugin()
+HotTablePlugins.registerPlugins()
 
 storiesOf('Viewport', module)
     .add('plain', () => {
