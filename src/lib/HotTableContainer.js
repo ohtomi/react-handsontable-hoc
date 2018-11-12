@@ -139,6 +139,7 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
         const newState = {}
         if (nextProps.data !== this.props.data || nextProps.rowFilter !== this.props.rowFilter) {
             newState.data = nextProps.rowFilter ? nextProps.rowFilter.evaluate(nextProps.data, nextProps.columns) : nextProps.data
+            newState.maxRows = newState.data.length
         }
         this.setState(newState)
     }
