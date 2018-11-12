@@ -2,6 +2,11 @@
 
 import Handsontable from 'handsontable'
 
+// see. https://github.com/handsontable/handsontable/blob/6.1.1/src/plugins/manualColumnResize/manualColumnResize.js#L459
+const MinimumColumnWidthByManual = 20
+
+const HiddenColumnWidth = 1e-20
+
 class HiddenColumnsPlugin extends Handsontable.plugins.BasePlugin {
 
     isEnabled() {
@@ -41,7 +46,7 @@ const preserveColumnWidth = (hotInstance: Handsontable) => {
     const manualColumnResize = hotInstance.getSettings().manualColumnResize
     if (Array.isArray(manualColumnResize)) {
         manualColumnResize.forEach((w, i) => {
-            if (w && w >= 20) {
+            if (w && w >= MinimumColumnWidthByManual) {
                 widths[i] = w
             }
         })
@@ -52,7 +57,7 @@ const preserveColumnWidth = (hotInstance: Handsontable) => {
 const resizeColumnWidth = (hotInstance: Handsontable, currentWidths: Array<?number>, hiddenColumns: Array<number>) => {
     // hiddenColumns is logical index
     return currentWidths.map((w, i) => {
-        return hiddenColumns.some(c => c === i) ? 1e-20 : w
+        return hiddenColumns.some(c => c === i) ? HiddenColumnWidth : w
     })
 }
 

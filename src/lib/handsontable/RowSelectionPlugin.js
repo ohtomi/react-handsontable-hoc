@@ -4,14 +4,21 @@ import Handsontable from 'handsontable'
 
 class RowSelectionPlugin extends Handsontable.plugins.BasePlugin {
 
+    constructor(hot) {
+        super(hot)
+
+        this.beforeOnCellMouseDown = this.beforeOnCellMouseDown.bind(this)
+        this.afterSelection = this.afterSelection.bind(this)
+    }
+
     isEnabled() {
         return this.hot.getSettings().selectionMode === 'row'
     }
 
     enablePlugin() {
         this.selectingCells = false
-        this.hot.addHook('beforeOnCellMouseDown', this.beforeOnCellMouseDown.bind(this))
-        this.hot.addHook('afterSelection', this.afterSelection.bind(this))
+        this.hot.addHook('beforeOnCellMouseDown', this.beforeOnCellMouseDown)
+        this.hot.addHook('afterSelection', this.afterSelection)
 
         super.enablePlugin()
     }
@@ -25,6 +32,9 @@ class RowSelectionPlugin extends Handsontable.plugins.BasePlugin {
     }
 
     destroy() {
+        this.hot.removeHook('beforeOnCellMouseDown', this.beforeOnCellMouseDown)
+        this.hot.removeHook('afterSelection', this.afterSelection)
+
         super.destroy()
     }
 
