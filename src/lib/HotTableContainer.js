@@ -169,3 +169,5 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
         return this.hot.current.hotInstance
     }
 }
+
+export {Handsontable}

@@ -2,7 +2,7 @@ import React from 'react'
 import {storiesOf} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
 
-import {HotTableContainer, HotTablePlugins, RowFilter} from '../lib'
+import {Handsontable, HotTableContainer, HotTablePlugins, RowFilter} from '../lib'
 import * as Expressions from '../lib/Expression'
 
 
@@ -70,12 +70,11 @@ const filter = new RowFilter([
 ])
 
 const h2Renderer = (instance, td, row, col, prop, value, cellProperties) => {
-    if (td.children.length) return td
-
     const aEl = document.createElement('a')
     aEl.href = '#'
     aEl.textContent = value
 
+    Handsontable.dom.empty(td)
     td.appendChild(aEl)
 
     return td
