@@ -46,7 +46,7 @@
     "flow-typed": "^2.2.3",
     "handsontable": "^6.1.1",
     "mkdirp": "^0.5.1",
-    "react": "^16.6.0",
+    "react": "^16.6.3",
     "react-dom": "^16.6.0",
     "react-scripts": "2.1.1",
     "rimraf": "^2.6.2"
