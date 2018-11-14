@@ -20,6 +20,8 @@ class RowSelectionPlugin extends Handsontable.plugins.BasePlugin {
         this.hot.addHook('beforeOnCellMouseDown', this.beforeOnCellMouseDown)
         this.hot.addHook('afterSelection', this.afterSelection)
 
+        Handsontable.hooks.register('afterRowSelection')
+
         super.enablePlugin()
     }
 
@@ -51,10 +53,16 @@ class RowSelectionPlugin extends Handsontable.plugins.BasePlugin {
         const toCol = this.hot.countCols() - 1
         const selected = this.hot.getSelectedRangeLast()
         if (r1 === selected.from.row && c1 === fromCol && r2 === selected.to.row && c2 === toCol) {
+            this.hot.runHooks('afterRowSelection', resolveSelectionRows(this.hot, r1, r2))
             return
         }
         this.hot.selectRows(r1, r2)
     }
+}
+
+const resolveSelectionRows = (hotInstance: Handsontable, r1: number, r2: number) => {
+    return Array.from({length: Math.max(r1, r2) - Math.min(r1, r2) + 1})
+        .reduce((output, value, index) => output.concat(hotInstance.toPhysicalRow(index + Math.min(r1, r2))), [])
 }
 
 const pluginName = 'RowSelectionPlugin'

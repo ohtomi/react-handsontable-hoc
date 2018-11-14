@@ -30,6 +30,10 @@ const columns = [
 
 const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
+const afterRowSelection = (rows) => {
+    action('afterRowSelection')(...rows)
+}
+
 const columnSorting = {
     initialConfig: {
         column: 2,
@@ -109,6 +113,7 @@ export class BasicStory extends React.Component {
                     data={this.state.data} columns={columns} colHeaders={colHeaders}
                     width="800" height="350"
                     selectionMode="row"
+                    afterRowSelection={afterRowSelection}
                     columnSorting={true}
                     initialColumnSorting={columnSorting}
                     manualColumnMove={true}

@@ -29,6 +29,10 @@ const columns = [
 
 const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
+const afterRowSelection = (rows) => {
+    action('afterRowSelection')(...rows)
+}
+
 export const RowSelectionStory = () => {
     return (
         <HotTableContainer
@@ -36,6 +40,7 @@ export const RowSelectionStory = () => {
             data={data} columns={columns} colHeaders={colHeaders}
             width="800" height="350"
             selectionMode="row"
+            afterRowSelection={afterRowSelection}
         />
     )
 }
