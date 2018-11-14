@@ -1,5 +1,4 @@
 import React from 'react'
-import {storiesOf} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
 
 import {HotTableContainer} from '../lib'
@@ -30,47 +29,25 @@ const columns = [
 
 const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
-class App extends React.Component {
-
-    constructor(props) {
-        super(props)
-
-        this.ref = React.createRef()
-        this.id = 'react-handsontable-hoc__src-stories-PersistentState'
-    }
-
-    onClick(ev) {
-        const hotInstance = this.ref.current.hotInstance()
-        const plugin = hotInstance.getPlugin('PersistentState')
-        plugin.resetValue()
-    }
-
-    render() {
-        const columnSorting = {
-            initialConfig: {
-                column: 4,
-                sortOrder: 'desc'
-            }
-        }
-
-        return (
-            <div>
-                <HotTableContainer
-                    ref={this.ref} id={this.id} persistentState={true}
-                    mode="debug" logger={action('debug')}
-                    data={data} columns={columns} colHeaders={colHeaders}
-                    width="800" height="250"
-                    columnSorting={columnSorting}
-                    manualColumnMove={true}
-                    manualColumnResize={true}/>
-                <hr/>
-                <button onClick={this.onClick.bind(this)}>clear localstorage</button>
-            </div>
-        )
+const columnSorting = {
+    initialConfig: {
+        column: 4,
+        sortOrder: 'desc'
     }
 }
 
-storiesOf('Persistent State', module)
-    .add('plain', () => {
-        return <App/>
-    })
+export const PersistentStateStory = () => {
+    return (
+        <HotTableContainer
+            id="react-handsontable-hoc__src-stories-PersistentState"
+            persistentState={true}
+            mode="debug" logger={action('debug')}
+            data={data} columns={columns} colHeaders={colHeaders}
+            width="800" height="350"
+            columnSorting={true}
+            initialColumnSorting={columnSorting}
+            manualColumnMove={true}
+            manualColumnResize={true}
+        />
+    )
+}

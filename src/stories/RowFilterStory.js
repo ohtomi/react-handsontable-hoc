@@ -1,8 +1,7 @@
 import React from 'react'
-import {storiesOf} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
 
-import {HotTableContainer, HotTablePlugins} from '../lib'
+import {Expressions, HotTableContainer, RowFilter} from '../lib'
 
 
 const data = [
@@ -30,28 +29,49 @@ const columns = [
 
 const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
-HotTablePlugins.RowSelectionPlugin.registerRowSelectionPlugin()
+const names = []
 
-storiesOf('Selection Mode', module)
-    .add('cell', () => {
-        return (
+const filter = new RowFilter([
+    {
+        physical: 1,
+        expression: Expressions.byFunction((value) => {
+            if (!names.length) {
+                return true
+            }
+
+            const reduced = names.reduce((prev, name) => {
+                const result = prev.value.indexOf(name + '')
+                if (result !== -1) {
+                    return {value: prev.value.substring(result + 1), position: result}
+                } else {
+                    return {value: '', position: result}
+                }
+            }, {value: value + '', position: 0})
+
+            return reduced.position !== -1
+        })
+    }
+])
+
+const onChange = (ev) => {
+    const tokens = ev.target.value.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[^\uD800-\uDFFF]/g) || []
+    names.splice(0)
+    names.push(...tokens)
+    filter.reevaluate()
+}
+
+export const RowFilterStory = () => {
+    return (
+        <div>
             <HotTableContainer
                 mode="debug" logger={action('debug')}
-                data={data} columns={columns} colHeaders={colHeaders} selectionMode="cell"
-                width="800" height="250"
-                columnSorting={true}
-                manualColumnMove={true}
-                manualColumnResize={true}/>
-        )
-    })
-    .add('row', () => {
-        return (
-            <HotTableContainer
-                mode="debug" logger={action('debug')}
-                data={data} columns={columns} colHeaders={colHeaders} selectionMode="row"
-                width="800" height="250"
-                columnSorting={true}
-                manualColumnMove={true}
-                manualColumnResize={true}/>
-        )
-    })
+                data={data} columns={columns} colHeaders={colHeaders}
+                width="800" height="350"
+                rowFilter={filter}
+                onClickRowFilterIndicator={action('onClickRowFilterIndicator')}
+            />
+            <hr/>
+            <label>filter by name: <input type="text" onChange={onChange} autoFocus={true}/></label>
+        </div>
+    )
+}

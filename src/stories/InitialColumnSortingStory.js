@@ -1,8 +1,7 @@
 import React from 'react'
-import {storiesOf} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
 
-import {HotTableContainer} from '../lib'
+import {HotTableContainer, HotTablePlugins} from '../lib'
 
 
 const data = [
@@ -30,33 +29,23 @@ const columns = [
 
 const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
-storiesOf('Basic', module)
-    .add('plain', () => {
-        return (
-            <HotTableContainer
-                mode="debug" logger={action('debug')}
-                data={data} columns={columns} colHeaders={colHeaders}
-                width="800" height="250"
-                columnSorting={true}
-                manualColumnMove={true}
-                manualColumnResize={true}/>
-        )
-    })
-    .add('initial sort', () => {
-        const columnSorting = {
-            initialConfig: {
-                column: 2,
-                sortOrder: 'desc'
-            }
-        }
+const columnSorting = {
+    initialConfig: {
+        column: 2,
+        sortOrder: 'desc'
+    }
+}
 
-        return (
-            <HotTableContainer
-                mode="debug" logger={action('debug')}
-                data={data} columns={columns} colHeaders={colHeaders}
-                width="800" height="250"
-                columnSorting={columnSorting}
-                manualColumnMove={true}
-                manualColumnResize={true}/>
-        )
-    })
+export const InitialColumnSortingStory = () => {
+    return (
+        <HotTableContainer
+            mode="debug" logger={action('debug')}
+            data={data} columns={columns} colHeaders={colHeaders}
+            width="800" height="350"
+            columnSorting={true}
+            initialColumnSorting={columnSorting}
+        />
+    )
+}
+
+HotTablePlugins.InitialColumnSortingPlugin.registerInitialColumnSortingPlugin()

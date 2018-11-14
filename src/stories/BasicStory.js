@@ -1,42 +1,34 @@
 import React from 'react'
-import {storiesOf} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
 
-import {Handsontable, HotTableContainer, HotTablePlugins, RowFilter} from '../lib'
+import {HotTableContainer, HotTablePlugins, RowFilter} from '../lib'
 import * as Expressions from '../lib/Expression'
 
 
-const rows = 50
-const cols = 20
+const data = [
+    {'id': 11, 'name': 'ford', 'year': 2015, 'volume': 1000, 'processed': true},
+    {'id': 12, 'name': 'ford', 'year': 2016, 'volume': 1000, 'processed': true},
+    {'id': 13, 'name': 'ford', 'year': 2017, 'volume': 1000, 'processed': true},
+    {'id': 14, 'name': 'ford', 'year': 2018, 'volume': 1000, 'processed': false},
+    {'id': 21, 'name': 'volvo', 'year': 2015, 'volume': 1000, 'processed': true},
+    {'id': 22, 'name': 'volvo', 'year': 2016, 'volume': 1000, 'processed': true},
+    {'id': 23, 'name': 'volvo', 'year': 2017, 'volume': 1000, 'processed': true},
+    {'id': 24, 'name': 'volvo', 'year': 2017, 'volume': 1000, 'processed': false},
+    {'id': 31, 'name': 'toyota', 'year': 2016, 'volume': 1000, 'processed': true},
+    {'id': 32, 'name': 'toyota', 'year': 2017, 'volume': 1000, 'processed': true},
+    {'id': 33, 'name': 'toyota', 'year': 2018, 'volume': 1000, 'processed': true},
+    {'id': 41, 'name': 'honda', 'year': 2015, 'volume': 1000, 'processed': true}
+]
 
+const columns = [
+    {data: 'id', type: 'numeric', width: 150, readOnly: true},
+    {data: 'name', type: 'text', width: 150, readOnly: true},
+    {data: 'year', type: 'numeric', width: 150, readOnly: true},
+    {data: 'volume', type: 'numeric', width: 150, readOnly: true},
+    {data: data => data.processed ? 'Yes' : 'No', type: 'text', width: 150, readOnly: true}
+]
 
-const data = Array.from({length: rows}).map((v1, k1) => {
-    return Array.from({length: cols}).map((v2, k2) => {
-        const columnName = `col-${k2}`
-        const columnValue = `${new Intl.NumberFormat().format(k1)}-${new Intl.NumberFormat().format(k2)}`
-        return new Map().set(columnName, columnValue)
-    }).reduce((prev, cell) => {
-        Array.from(cell.keys()).forEach((name) => {
-            prev[name] = cell.get(name)
-        })
-        return prev
-    }, {})
-})
-
-const columns = Array.from({length: cols}).map((v2, k2) => {
-    const columnName = `col-${k2}`
-    return {
-        data: columnName,
-        type: 'text',
-        width: 100,
-        readOnly: true,
-        wordWrap: false
-    }
-})
-
-const colHeaders = Array.from({length: cols}).map((v2, k2) => {
-    return `col-${k2}`
-})
+const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
 const columnSorting = {
     initialConfig: {
@@ -69,28 +61,15 @@ const filter = new RowFilter([
     }
 ])
 
-const h2Renderer = (instance, td, row, col, prop, value, cellProperties) => {
-    const aEl = document.createElement('a')
-    aEl.href = '#'
-    aEl.textContent = value
-
-    Handsontable.dom.empty(td)
-    td.appendChild(aEl)
-
-    return td
-}
-
-columns[0].renderer = h2Renderer
-
-
-class App extends React.Component {
+export class BasicStory extends React.Component {
 
     constructor(props) {
         super(props)
 
         this.ref = React.createRef()
-        this.id = 'react-handsontable-hoc__src-stories-Viewport'
+        this.id = 'react-handsontable-hoc__src-stories-Basic'
         this.state = {
+            data: [],
             hiddenColumns: []
         }
     }
@@ -115,19 +94,30 @@ class App extends React.Component {
         plugin.resetValue()
     }
 
+    onClick3(ev) {
+        this.setState({data: data})
+    }
+
     render() {
         return (
             <div>
                 <HotTableContainer
-                    ref={this.ref} id={this.id} persistentState={true}
+                    ref={this.ref}
+                    id={this.id}
+                    persistentState={true}
                     mode="debug" logger={action('debug')}
-                    data={data} columns={columns} colHeaders={colHeaders} selectionMode="row"
-                    width="800" height="250"
-                    columnSorting={columnSorting}
+                    data={this.state.data} columns={columns} colHeaders={colHeaders}
+                    width="800" height="350"
+                    selectionMode="row"
+                    columnSorting={true}
+                    initialColumnSorting={columnSorting}
                     manualColumnMove={true}
                     manualColumnResize={true}
                     rowFilter={filter}
-                    onClickRowFilterIndicator={action('onClickRowFilterIndicator')}/>
+                    onClickRowFilterIndicator={action('onClickRowFilterIndicator')}
+                />
+                <br/>
+                <button onClick={this.onClick3.bind(this)}>load data</button>
                 <hr/>
                 <button onClick={this.onClick1.bind(this)}>{this.state.hiddenColumns.length ? 'show' : 'hide'} some columns</button>
                 <br/>
@@ -140,8 +130,3 @@ class App extends React.Component {
 }
 
 HotTablePlugins.registerPlugins()
-
-storiesOf('Viewport', module)
-    .add('plain', () => {
-        return <App/>
-    })

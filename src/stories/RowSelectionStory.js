@@ -1,5 +1,4 @@
 import React from 'react'
-import {storiesOf} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
 
 import {HotTableContainer, HotTablePlugins} from '../lib'
@@ -30,46 +29,15 @@ const columns = [
 
 const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
-
-class App extends React.Component {
-
-    constructor(props) {
-        super(props)
-
-        this.ref = React.createRef()
-        this.state = {
-            hiddenColumns: []
-        }
-    }
-
-    onClick(ev) {
-        const plugin = HotTablePlugins.HiddenColumnsPlugin.getHiddenColumnsPlugin(this.ref.current.hotInstance())
-        const hiddenColumns = this.state.hiddenColumns.length ? [] : [3]
-        plugin.hideColumns(hiddenColumns)
-        this.setState({hiddenColumns})
-    }
-
-    render() {
-        return (
-            <div>
-                <HotTableContainer
-                    ref={this.ref}
-                    mode="debug" logger={action('debug')}
-                    data={data} columns={columns} colHeaders={colHeaders}
-                    width="800" height="250"
-                    columnSorting={true}
-                    manualColumnMove={true}
-                    manualColumnResize={true}/>
-                <hr/>
-                <button onClick={this.onClick.bind(this)}>{this.state.hiddenColumns.length ? 'show' : 'hide'} volumn column</button>
-            </div>
-        )
-    }
+export const RowSelectionStory = () => {
+    return (
+        <HotTableContainer
+            mode="debug" logger={action('debug')}
+            data={data} columns={columns} colHeaders={colHeaders}
+            width="800" height="350"
+            selectionMode="row"
+        />
+    )
 }
 
-HotTablePlugins.HiddenColumnsPlugin.registerHiddenColumnsPlugin()
-
-storiesOf('Hidden Columns', module)
-    .add('plain', () => {
-        return <App/>
-    })
+HotTablePlugins.RowSelectionPlugin.registerRowSelectionPlugin()
