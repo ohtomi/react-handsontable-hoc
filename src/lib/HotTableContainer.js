@@ -48,7 +48,7 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
         const filtered = props.rowFilter ? props.rowFilter.evaluate(props.data, props.columns) : props.data
 
         this.state = {
-            data: filtered.length ? filtered : null,
+            data: filtered.length ? filtered : [],
             maxRows: filtered.length
         }
     }
@@ -56,7 +56,7 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
     evaluateRowFilter(data: Array<any>, columns: Array<Column>, rowFilter: RowFilter) {
         const filtered = rowFilter.evaluate(data, columns)
         this.setState({
-            data: filtered.length ? filtered : null,
+            data: filtered.length ? filtered : [],
             maxRows: filtered.length
         })
     }
@@ -151,7 +151,8 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
                       data={this.state.data}
                       startCols={this.props.columns.length}
                       maxRows={this.state.maxRows}
-                      afterUpdateSettings={this.afterUpdateSettings.bind(this)}/>
+                      afterUpdateSettings={this.afterUpdateSettings.bind(this)}
+            />
         )
     }
 
