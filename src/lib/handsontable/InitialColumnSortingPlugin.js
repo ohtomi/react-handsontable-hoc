@@ -18,7 +18,7 @@ class InitialColumnSortingPlugin extends Handsontable.plugins.BasePlugin {
     }
 
     enablePlugin() {
-        this.initialized = false
+        this.initializedThisPlugin = false
         this.hot.addHook('afterUpdateSettings', this.afterUpdateSettings)
 
         super.enablePlugin()
@@ -29,8 +29,8 @@ class InitialColumnSortingPlugin extends Handsontable.plugins.BasePlugin {
     }
 
     updatePlugin() {
-        if (this.initialized) {
-            this.initialized = true
+        if (!this.initializedThisPlugin) {
+            this.initializedThisPlugin = true
             sortColumnByInitialConfig(this.hot)
         }
 
