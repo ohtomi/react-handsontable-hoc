@@ -34,7 +34,7 @@ const afterRowSelection = (rows) => {
     action('afterRowSelection')(...rows)
 }
 
-const columnSorting = {
+const initialColumnSorting = {
     initialConfig: {
         column: 2,
         sortOrder: 'desc'
@@ -118,7 +118,7 @@ export class BasicStory extends React.Component {
                     afterRowSelection={afterRowSelection}
                     // for Initial Column Sorting
                     columnSorting={true}
-                    initialColumnSorting={columnSorting}
+                    initialColumnSorting={initialColumnSorting}
                     // for Manual Column Hide
                     manualColumnsHide={this.state.manualColumnsHide}
                     manualColumnResize={true}
@@ -126,9 +126,9 @@ export class BasicStory extends React.Component {
                     rowFilter={filter}
                     onClickRowFilterIndicator={action('onClickRowFilterIndicator')}
                 />
-                <br/>
-                <button onClick={this.onClick3.bind(this)}>load data</button>
                 <hr/>
+                <button onClick={this.onClick3.bind(this)}>load data</button>
+                <br/>
                 manualColumnHide:
                 {
                     colHeaders.map((colHeader, index) => {
