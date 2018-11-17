@@ -1,13 +1,13 @@
 import * as RowSelectionPlugin from './RowSelectionPlugin'
 import * as InitialColumnSortingPlugin from './InitialColumnSortingPlugin'
-import * as HiddenColumnsPlugin from './HiddenColumnsPlugin'
+import * as ManualColumnsHidePlugin from './ManualColumnsHidePlugin'
 
 export {RowSelectionPlugin}
 export {InitialColumnSortingPlugin}
-export {HiddenColumnsPlugin}
+export {ManualColumnsHidePlugin}
 
 export const registerPlugins = () => {
     RowSelectionPlugin.registerRowSelectionPlugin()
     InitialColumnSortingPlugin.registerInitialColumnSortingPlugin()
-    HiddenColumnsPlugin.registerHiddenColumnsPlugin()
+    ManualColumnsHidePlugin.registerManualColumnsHidePlugin()
 }

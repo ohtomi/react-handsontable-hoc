@@ -74,15 +74,15 @@ export class BasicStory extends React.Component {
         this.id = 'react-handsontable-hoc__src-stories-Basic'
         this.state = {
             data: [],
-            hiddenColumns: []
+            manualColumnsHide: []
         }
     }
 
-    onClick1(ev) {
-        const plugin = HotTablePlugins.HiddenColumnsPlugin.getHiddenColumnsPlugin(this.ref.current.hotInstance())
-        const hiddenColumns = this.state.hiddenColumns.length ? [] : [1, 3, 5, 7, 9]
-        plugin.hideColumns(hiddenColumns)
-        this.setState({hiddenColumns})
+    onChangeManualColumnsHide(index, ev) {
+        const column = +index
+        const checked = ev.target.checked
+        const manualColumnsHide = this.state.manualColumnsHide.filter(v => v !== column).concat(checked ? [column] : [])
+        this.setState({manualColumnsHide})
     }
 
     onChange(ev) {
@@ -112,19 +112,37 @@ export class BasicStory extends React.Component {
                     mode="debug" logger={action('debug')}
                     data={this.state.data} columns={columns} colHeaders={colHeaders}
                     width="800" height="350"
+                    manualColumnMove={true}
+                    // for Row Selection
                     selectionMode="row"
                     afterRowSelection={afterRowSelection}
+                    // for Initial Column Sorting
                     columnSorting={true}
                     initialColumnSorting={columnSorting}
-                    manualColumnMove={true}
+                    // for Manual Column Hide
+                    manualColumnsHide={this.state.manualColumnsHide}
                     manualColumnResize={true}
+                    // for Row Filter
                     rowFilter={filter}
                     onClickRowFilterIndicator={action('onClickRowFilterIndicator')}
                 />
                 <br/>
                 <button onClick={this.onClick3.bind(this)}>load data</button>
                 <hr/>
-                <button onClick={this.onClick1.bind(this)}>{this.state.hiddenColumns.length ? 'show' : 'hide'} some columns</button>
+                manualColumnHide:
+                {
+                    colHeaders.map((colHeader, index) => {
+                            const checked = this.state.manualColumnsHide.some(v => v === index)
+                            const onChange = this.onChangeManualColumnsHide.bind(this, index)
+                            return (
+                                <label key={index} style={{marginLeft: '6px'}}>
+                                    <input type="checkbox" checked={checked} onChange={onChange}/>
+                                    {colHeader}
+                                </label>
+                            )
+                        }
+                    )
+                }
                 <br/>
                 <label>filter by col-1: <input type="text" onChange={this.onChange.bind(this)} autoFocus={true}/></label>
                 <br/>
