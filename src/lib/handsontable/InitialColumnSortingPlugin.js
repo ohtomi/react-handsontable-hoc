@@ -32,7 +32,7 @@ class InitialColumnSortingPlugin extends BasePlugin {
         const that = this
         this.hot._registerTimeout(
             setTimeout(() => {
-                sortColumnByInitialConfig(this.hot)
+                sortColumnByInitialConfig(that.hot)
             }, 0))
 
         super.enablePlugin()
