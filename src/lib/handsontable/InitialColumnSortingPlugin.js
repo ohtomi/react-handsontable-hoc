@@ -10,7 +10,20 @@ class InitialColumnSortingPlugin extends Handsontable.plugins.BasePlugin {
         this.afterUpdateSettings = this.afterUpdateSettings.bind(this)
     }
 
+    debug(...messages: any) {
+        if (this.hot.getSettings().mode !== 'debug') {
+            return
+        }
+        if (!this.hot.getSettings().logger) {
+            return
+        }
+        const stringifier = (value) => typeof value === 'object' ? JSON.stringify(value) : value
+        this.hot.getSettings().logger('InitialColumnSortingPlugin', ...messages.map(stringifier))
+    }
+
     isEnabled() {
+        this.debug('isEnabled')
+
         const hasColumnSorting = !!this.hot.getSettings().columnSorting
         const hasInitialColumnSorting = !!this.hot.getSettings().initialColumnSorting
 
@@ -18,32 +31,44 @@ class InitialColumnSortingPlugin extends Handsontable.plugins.BasePlugin {
     }
 
     enablePlugin() {
-        this.initializedThisPlugin = false
+        this.debug('enablePlugin', this.enabled)
+
+        if (this.enabled) {
+            return
+        }
+
         this.hot.addHook('afterUpdateSettings', this.afterUpdateSettings)
+
+        const that = this
+        this.hot._registerTimeout(
+            setTimeout(() => {
+                sortColumnByInitialConfig(this.hot)
+            }, 0))
 
         super.enablePlugin()
     }
 
     disablePlugin() {
+        this.debug('disablePlugin')
         super.disablePlugin()
     }
 
     updatePlugin() {
-        if (!this.initializedThisPlugin) {
-            this.initializedThisPlugin = true
-            sortColumnByInitialConfig(this.hot)
-        }
-
+        this.debug('updatePlugin')
         super.updatePlugin()
     }
 
     destroy() {
+        this.debug('destroy')
+
         this.hot.removeHook('afterUpdateSettings', this.afterUpdateSettings)
 
         super.destroy()
     }
 
     afterUpdateSettings(newSettings: any) {
+        this.debug('afterUpdateSettings', newSettings)
+
         if (newSettings.data) {
             sortColumnByInitialConfig(this.hot)
         }
@@ -88,12 +113,13 @@ const getFromSettings = (hotInstance: Handsontable) => {
 }
 
 const sortColumn = (hotInstance: Handsontable, column?: number, sortOrder?: 'asc' | 'desc' | '') => {
-    // column is logical index
+    // column is physical column index
     if (!(column != null) || !sortOrder) {
         return
     }
+    const visual = hotInstance.toVisualColumn(column)
     const plugin = hotInstance.getPlugin('columnSorting')
-    plugin.sort({column, sortOrder})
+    plugin.sort({column: visual, sortOrder})
 }
 
 const pluginName = 'InitialColumnSortingPlugin'
