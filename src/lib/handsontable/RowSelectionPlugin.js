@@ -1,8 +1,9 @@
 // @flow
 
 import Handsontable from 'handsontable'
+import {BasePlugin} from './BasePlugin'
 
-class RowSelectionPlugin extends Handsontable.plugins.BasePlugin {
+class RowSelectionPlugin extends BasePlugin {
 
     constructor(hot) {
         super(hot)
@@ -12,10 +13,18 @@ class RowSelectionPlugin extends Handsontable.plugins.BasePlugin {
     }
 
     isEnabled() {
+        this.debug('isEnabled')
+
         return this.hot.getSettings().selectionMode === 'row'
     }
 
     enablePlugin() {
+        this.debug('enablePlugin', this.enabled)
+
+        if (this.enabled) {
+            return
+        }
+
         this.selectingCells = false
         this.hot.addHook('beforeOnCellMouseDown', this.beforeOnCellMouseDown)
         this.hot.addHook('afterSelection', this.afterSelection)
@@ -26,14 +35,18 @@ class RowSelectionPlugin extends Handsontable.plugins.BasePlugin {
     }
 
     disablePlugin() {
+        this.debug('disablePlugin')
         super.disablePlugin()
     }
 
     updatePlugin() {
+        this.debug('updatePlugin')
         super.updatePlugin()
     }
 
     destroy() {
+        this.debug('destroy')
+
         this.hot.removeHook('beforeOnCellMouseDown', this.beforeOnCellMouseDown)
         this.hot.removeHook('afterSelection', this.afterSelection)
 
@@ -42,10 +55,14 @@ class RowSelectionPlugin extends Handsontable.plugins.BasePlugin {
 
     beforeOnCellMouseDown(ev: MouseEvent, coords: { row: number }, td: HTMLElement) {
         // In case the row/column header was clicked, the index is negative.
+        this.debug('beforeOnCellMouseDown', ev, coords, td)
+
         this.selectingCells = coords.row >= 0
     }
 
     afterSelection(r1: number, c1: number, r2: number, c2: number, preventScrolling: { value: boolean }) {
+        this.debug('afterSelection', r1, c1, r2, c2, preventScrolling)
+
         if (!this.selectingCells) {
             return
         }

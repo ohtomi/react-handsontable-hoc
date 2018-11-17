@@ -1,24 +1,14 @@
 // @flow
 
 import Handsontable from 'handsontable'
+import {BasePlugin} from './BasePlugin'
 
-class InitialColumnSortingPlugin extends Handsontable.plugins.BasePlugin {
+class InitialColumnSortingPlugin extends BasePlugin {
 
     constructor(hot) {
         super(hot)
 
         this.afterUpdateSettings = this.afterUpdateSettings.bind(this)
-    }
-
-    debug(...messages: any) {
-        if (this.hot.getSettings().mode !== 'debug') {
-            return
-        }
-        if (!this.hot.getSettings().logger) {
-            return
-        }
-        const stringifier = (value) => typeof value === 'object' ? JSON.stringify(value) : value
-        this.hot.getSettings().logger('InitialColumnSortingPlugin', ...messages.map(stringifier))
     }
 
     isEnabled() {

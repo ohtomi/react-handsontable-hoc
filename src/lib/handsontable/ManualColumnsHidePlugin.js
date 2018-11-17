@@ -1,13 +1,14 @@
 // @flow
 
 import Handsontable from 'handsontable'
+import {BasePlugin} from './BasePlugin'
 
 // see. https://github.com/handsontable/handsontable/blob/6.1.1/src/plugins/manualColumnResize/manualColumnResize.js#L459
 const MinimumColumnWidthByManual = 20
 
 const HiddenColumnWidth = 1e-20
 
-class ManualColumnsHidePlugin extends Handsontable.plugins.BasePlugin {
+class ManualColumnsHidePlugin extends BasePlugin {
 
     constructor(hot) {
         super(hot)
@@ -15,17 +16,9 @@ class ManualColumnsHidePlugin extends Handsontable.plugins.BasePlugin {
         this.afterUpdateSettings = this.afterUpdateSettings.bind(this)
     }
 
-    debug(...messages: any) {
-        if (this.hot.getSettings().mode !== 'debug') {
-            return
-        }
-        if (!this.hot.getSettings().logger) {
-            return
-        }
-        this.hot.getSettings().logger(...messages)
-    }
-
     isEnabled() {
+        this.debug('isEnabled')
+
         const hasManualColumnsHide = !!this.hot.getSettings().manualColumnsHide
         const hasManualColumnResize = !!this.hot.getSettings().manualColumnResize
 
@@ -33,7 +26,7 @@ class ManualColumnsHidePlugin extends Handsontable.plugins.BasePlugin {
     }
 
     enablePlugin() {
-        this.debug('ManualColumnsHidePlugin:enablePlugin', this.enabled)
+        this.debug('enablePlugin', this.enabled)
 
         if (this.enabled) {
             return
@@ -53,21 +46,25 @@ class ManualColumnsHidePlugin extends Handsontable.plugins.BasePlugin {
     }
 
     disablePlugin() {
+        this.debug('disablePlugin')
         super.disablePlugin()
     }
 
     updatePlugin() {
+        this.debug('updatePlugin')
         super.updatePlugin()
     }
 
     destroy() {
+        this.debug('destroy')
+
         this.hot.removeHook('afterUpdateSettings', this.afterUpdateSettings)
 
         super.destroy()
     }
 
     afterUpdateSettings(newSettings: any) {
-        this.debug('ManualColumnsHidePlugin:afterUpdateSettings', newSettings)
+        this.debug('afterUpdateSettings', newSettings)
 
         if (newSettings.manualColumnsHide) {
             if (Array.isArray(newSettings.manualColumnsHide)) {
@@ -77,7 +74,7 @@ class ManualColumnsHidePlugin extends Handsontable.plugins.BasePlugin {
     }
 
     hideColumns(hiddenColumns: Array<number>) {
-        this.debug('ManualColumnsHidePlugin:hideColumns', hiddenColumns)
+        this.debug('hideColumns', hiddenColumns)
 
         const columnWidths = preserveColumnWidth(this.hot)
         const manualColumnResize = resizeColumnWidth(this.hot, columnWidths, hiddenColumns)
