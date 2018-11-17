@@ -145,9 +145,13 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
     }
 
     render() {
+        const {mode, logger, ...otherProps} = this.props
+
         return (
             <HotTable ref={this.hot}
-                      {...this.props}
+                      mode={mode}
+                      logger={this.debug.bind(this)}
+                      {...otherProps}
                       data={this.state.data}
                       startCols={this.props.columns.length}
                       maxRows={this.state.maxRows}
@@ -157,13 +161,15 @@ export class HotTableContainer extends React.Component<propsType, stateType> {
     }
 
     debug(...messages: any) {
-        if (this.props.mode !== 'debug') {
+        const {mode, logger} = this.props
+        if (mode !== 'debug') {
             return
         }
-        if (!this.props.logger) {
+        if (!logger) {
             return
         }
-        this.props.logger(...messages)
+        const stringifier = (value) => typeof value === 'object' ? JSON.stringify(value) : value
+        logger(...messages.map(stringifier))
     }
 
     hotInstance(): Handsontable {
