@@ -57,7 +57,7 @@ export const RowFilterStory = () => {
     return (
         <div>
             <HotTableContainer
-                mode="debug" logger={action('debug')}
+                mode="debug" logger={action('RowFilterStory')}
                 data={data} columns={columns} colHeaders={colHeaders}
                 width="800" height="350"
                 rowFilter={filter}

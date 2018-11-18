@@ -39,7 +39,7 @@ const columnSorting = {
 export const InitialColumnSortingStory = () => {
     return (
         <HotTableContainer
-            mode="debug" logger={action('debug')}
+            mode="debug" logger={action('InitialColumnSortingStory')}
             data={data} columns={columns} colHeaders={colHeaders}
             width="800" height="350"
             columnSorting={true}

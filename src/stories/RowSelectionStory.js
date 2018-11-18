@@ -36,7 +36,7 @@ const afterRowSelection = (rows) => {
 export const RowSelectionStory = () => {
     return (
         <HotTableContainer
-            mode="debug" logger={action('debug')}
+            mode="debug" logger={action('RowSelectionStory')}
             data={data} columns={columns} colHeaders={colHeaders}
             width="800" height="350"
             selectionMode="row"

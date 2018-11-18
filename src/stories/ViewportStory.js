@@ -37,7 +37,7 @@ const colHeaders = true
 export const ViewportStory = () => {
     return (
         <HotTableContainer
-            mode="debug" logger={action('debug')}
+            mode="debug" logger={action('ViewportStory')}
             data={data} columns={columns} colHeaders={colHeaders}
             width="800" height="350"
         />

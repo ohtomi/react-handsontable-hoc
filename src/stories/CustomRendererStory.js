@@ -43,7 +43,7 @@ const colHeaders = true
 export const CustomRendererStory = () => {
     return (
         <HotTableContainer
-            mode="debug" logger={action('debug')}
+            mode="debug" logger={action('CustomRendererStory')}
             data={data} columns={columns} colHeaders={colHeaders}
             width="800" height="350"
         />

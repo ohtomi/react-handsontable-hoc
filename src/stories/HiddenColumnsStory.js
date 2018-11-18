@@ -36,7 +36,7 @@ HotTablePlugins.ManualColumnsHidePlugin.registerManualColumnsHidePlugin()
 export const HiddenColumnsStory = () => {
     return (
         <HotTableContainer
-            mode="debug" logger={action('debug')}
+            mode="debug" logger={action('HiddenColumnsStory')}
             data={data} columns={columns} colHeaders={colHeaders}
             width="800" height="350"
             manualColumnsHide={manualColumnsHide}

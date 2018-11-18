@@ -50,7 +50,7 @@ export class BasicStory extends React.Component {
         this.id = 'react-handsontable-hoc__src-stories-Basic'
         this.state = {
             mode: 'production',
-            logger: action('production'),
+            logger: action('BasicStory'),
             data: [],
             manualColumnsHide: [],
             rowFilter: new RowFilter([]),
@@ -65,8 +65,7 @@ export class BasicStory extends React.Component {
 
     onChangeMode(ev) {
         const mode = ev.target.value
-        const logger = action(mode)
-        this.setState({mode, logger})
+        this.setState({mode})
     }
 
     onChangeManualColumnsHide(index, ev) {

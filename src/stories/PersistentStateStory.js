@@ -41,7 +41,7 @@ export const PersistentStateStory = () => {
         <HotTableContainer
             id="react-handsontable-hoc__src-stories-PersistentState"
             persistentState={true}
-            mode="debug" logger={action('debug')}
+            mode="debug" logger={action('PersistentStateStory')}
             data={data} columns={columns} colHeaders={colHeaders}
             width="800" height="350"
             columnSorting={true}
