@@ -1,7 +1,7 @@
 // @flow
 
 import {Expression} from './Expression'
-import type {Column, ColumnDataFunction} from './HandsontableTypes'
+import type {HotTableColumn, HotTableColumnDataFunction} from './HandsontableTypes'
 
 export type PhysicalToExpression = {
     physical: number,
@@ -16,7 +16,7 @@ export class RowFilter {
         this.expressions = expressions
     }
 
-    evaluate(data: Array<any>, columns: Array<Column>, skips: Array<number> = []): Array<any> {
+    evaluate(data: Array<any>, columns: Array<HotTableColumn>, skips: Array<number> = []): Array<any> {
         return data.filter((record: any): boolean => {
             return this.expressions.every((element: PhysicalToExpression): boolean => {
                 if (skips.some((skip: number): boolean => skip === element.physical)) {
@@ -30,7 +30,7 @@ export class RowFilter {
                 if (typeof column.data === 'string') {
                     value = record[column.data]
                 } else if (typeof column.data === 'function') {
-                    value = (column.data: ColumnDataFunction)(record)
+                    value = (column.data: HotTableColumnDataFunction)(record)
                 } else {
                     return false
                 }
