@@ -90,7 +90,7 @@ class RowFilterPlugin extends BasePlugin {
             ev.stopPropagation()
 
             const column = +ev.target.dataset.column
-            this.hot.runHooks('onClickColHeaderButton', column)
+            this.hot.runHooks('onClickColHeaderButton', column, ev.target)
         }
     }
 

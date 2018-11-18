@@ -41,30 +41,6 @@ const initialColumnSorting = {
     }
 }
 
-const names = []
-
-const filter = new RowFilter([
-    {
-        physical: 1,
-        expression: Expressions.byFunction((value) => {
-            if (!names.length) {
-                return true
-            }
-
-            const reduced = names.reduce((accum, name) => {
-                const result = accum.value.indexOf(name + '')
-                if (result !== -1) {
-                    return {value: accum.value.substring(result + 1), position: result}
-                } else {
-                    return {value: '', position: result}
-                }
-            }, {value: value + '', position: 0})
-
-            return reduced.position !== -1
-        })
-    }
-])
-
 export class BasicStory extends React.Component {
 
     constructor(props) {
@@ -77,13 +53,20 @@ export class BasicStory extends React.Component {
             logger: action('production'),
             data: [],
             manualColumnsHide: [],
-            rowFilter: filter
+            rowFilter: new RowFilter([]),
+            popover: {
+                column: -1,
+                values: columns.map(c => ''),
+                top: '100px',
+                left: '100px'
+            }
         }
     }
 
     onChangeMode(ev) {
         const mode = ev.target.value
-        this.setState({mode})
+        const logger = action(mode)
+        this.setState({mode, logger})
     }
 
     onChangeManualColumnsHide(index, ev) {
@@ -93,11 +76,37 @@ export class BasicStory extends React.Component {
         this.setState({manualColumnsHide})
     }
 
-    onChange(ev) {
-        const tokens = ev.target.value.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[^\uD800-\uDFFF]/g) || []
-        names.splice(0)
-        names.push(...tokens)
-        this.setState({rowFilter: filter})
+    showRowFilterPopover(column, buttonEl) {
+        const {values} = this.state.popover
+        if (buttonEl) {
+            const thEl = buttonEl.closest('th')
+            const {bottom, right} = thEl.getBoundingClientRect()
+            const top = `${bottom}px`
+            const left = `${right - 200 - 1 - 5 - 2 - 2}px`
+            this.setState({popover: {column, values, top, left}})
+        } else {
+            this.setState({popover: {column, values}})
+        }
+    }
+
+    onChangeRowFilterValue(column, ev) {
+        const expected = ev.target.value
+        const {rowFilter, popover} = this.state
+        rowFilter.expressions = rowFilter.expressions.filter(e => e.physical !== column)
+            .concat({
+                physical: column,
+                expression: Expressions.byFunction((value) => {
+                    if (columns[column].type === 'text') {
+                        return value.indexOf(expected) !== -1
+                    } else if (columns[column].type === 'numeric') {
+                        return value > +expected
+                    } else {
+                        return true
+                    }
+                })
+            })
+        popover.values[column] = expected
+        this.setState({rowFilter, popover})
     }
 
     onClickLoadDataButton(ev) {
@@ -134,8 +143,33 @@ export class BasicStory extends React.Component {
                     rowFilter={this.state.rowFilter}
                     colHeaderButtonClassName={'basic-story'}
                     afterRowFiltering={action('afterRowFiltering')}
-                    onClickColHeaderButton={action('onClickColHeaderButton')}
+                    onClickColHeaderButton={this.showRowFilterPopover.bind(this)}
                 />
+                {
+                    [this.state.popover].map((popover, index) => {
+                        const style = {
+                            display: popover.column !== -1 ? 'block' : 'none',
+                            border: '1px solid',
+                            backgroundColor: '#eee',
+                            padding: '2px',
+                            margin: '1px 1px 0 5px',
+                            position: 'absolute',
+                            zIndex: 9999,
+                            top: popover.top || '100px',
+                            left: popover.left || '100px',
+                            width: '200px'
+                        }
+                        const value = popover.column !== -1 ? popover.values[popover.column] : ''
+                        const onChange = (ev) => this.onChangeRowFilterValue(popover.column, ev)
+                        const onClick = (ev) => this.showRowFilterPopover(-1)
+                        return (
+                            <div key={index} style={style}>
+                                <input type="text" value={value} onChange={onChange}/>
+                                <button style={{float: 'right'}} onClick={onClick}>X</button>
+                            </div>
+                        )
+                    })
+                }
                 <hr/>
                 mode:
                 {
@@ -165,8 +199,6 @@ export class BasicStory extends React.Component {
                         }
                     )
                 }
-                <br/>
-                <label>filter by col-1: <input type="text" onChange={this.onChange.bind(this)} autoFocus={true}/></label>
                 <hr/>
                 <button onClick={this.onClickLoadDataButton.bind(this)}>load data</button>
                 <span>{' '}</span>
