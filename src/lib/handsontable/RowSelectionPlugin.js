@@ -5,7 +5,7 @@ import {BasePlugin} from './BasePlugin'
 
 class RowSelectionPlugin extends BasePlugin {
 
-    constructor(hot) {
+    constructor(hot: Handsontable) {
         super(hot)
 
         this.beforeOnCellMouseDown = this.beforeOnCellMouseDown.bind(this)

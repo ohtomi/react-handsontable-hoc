@@ -8,7 +8,7 @@ import './RowFilterPlugin.css'
 
 class RowFilterPlugin extends BasePlugin {
 
-    constructor(hot) {
+    constructor(hot: Handsontable) {
         super(hot)
 
         this.afterUpdateSettings = this.afterUpdateSettings.bind(this)

@@ -5,7 +5,7 @@ import {BasePlugin} from './BasePlugin'
 
 class InitialColumnSortingPlugin extends BasePlugin {
 
-    constructor(hot) {
+    constructor(hot: Handsontable) {
         super(hot)
 
         this.afterUpdateSettings = this.afterUpdateSettings.bind(this)

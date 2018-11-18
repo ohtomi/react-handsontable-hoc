@@ -10,7 +10,7 @@ const HiddenColumnWidth = 1e-20
 
 class ManualColumnsHidePlugin extends BasePlugin {
 
-    constructor(hot) {
+    constructor(hot: Handsontable) {
         super(hot)
 
         this.afterUpdateSettings = this.afterUpdateSettings.bind(this)
