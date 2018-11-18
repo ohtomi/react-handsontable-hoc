@@ -78,8 +78,35 @@ class RowSelectionPlugin extends BasePlugin {
 }
 
 const resolveSelectionRows = (hotInstance: Handsontable, r1: number, r2: number) => {
+    const {data, data2} = hotInstance.getSettings()
+
+    const resolve = (physical) => {
+        const source = hotInstance.getSourceDataAtRow(physical)
+        if (Array.isArray(source)) {
+            // source is array
+            if (data.length > data2.length) {
+                // source has physical row index at last
+                return source[source.length - 1]
+            } else {
+                return physical
+            }
+        } else {
+            // source is object
+            if (source.hasOwnProperty('__index__')) {
+                // source has physical row index as __index__
+                return source['__index__']
+            } else {
+                return physical
+            }
+        }
+    }
+
     return Array.from({length: Math.max(r1, r2) - Math.min(r1, r2) + 1})
-        .reduce((output, value, index) => output.concat(hotInstance.toPhysicalRow(index + Math.min(r1, r2))), [])
+        .reduce((output, value, index) => {
+            const visual = index + Math.min(r1, r2)
+            const physical = hotInstance.toPhysicalRow(visual)
+            return output.concat(resolve(physical))
+        }, [])
 }
 
 const pluginName = 'RowSelectionPlugin'

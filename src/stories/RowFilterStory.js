@@ -29,7 +29,7 @@ const columns = [
 
 const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
-const names = []
+const names = 'oo'.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[^\uD800-\uDFFF]/g) // matches 'volvo' or 'toyota'
 
 const filter = new RowFilter([
     {
@@ -39,10 +39,10 @@ const filter = new RowFilter([
                 return true
             }
 
-            const reduced = names.reduce((prev, name) => {
-                const result = prev.value.indexOf(name + '')
+            const reduced = names.reduce((accum, name) => {
+                const result = accum.value.indexOf(name + '')
                 if (result !== -1) {
-                    return {value: prev.value.substring(result + 1), position: result}
+                    return {value: accum.value.substring(result + 1), position: result}
                 } else {
                     return {value: '', position: result}
                 }
@@ -53,13 +53,6 @@ const filter = new RowFilter([
     }
 ])
 
-const onChange = (ev) => {
-    const tokens = ev.target.value.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[^\uD800-\uDFFF]/g) || []
-    names.splice(0)
-    names.push(...tokens)
-    filter.reevaluate()
-}
-
 export const RowFilterStory = () => {
     return (
         <div>
@@ -68,10 +61,10 @@ export const RowFilterStory = () => {
                 data={data} columns={columns} colHeaders={colHeaders}
                 width="800" height="350"
                 rowFilter={filter}
-                onClickRowFilterIndicator={action('onClickRowFilterIndicator')}
+                colHeaderButtonClassName={'row-filter-story'}
+                afterRowFiltering={action('afterRowFiltering')}
+                onClickColHeaderButton={action('onClickColHeaderButton')}
             />
-            <hr/>
-            <label>filter by name: <input type="text" onChange={onChange} autoFocus={true}/></label>
         </div>
     )
 }

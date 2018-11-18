@@ -51,10 +51,10 @@ const filter = new RowFilter([
                 return true
             }
 
-            const reduced = names.reduce((prev, name) => {
-                const result = prev.value.indexOf(name + '')
+            const reduced = names.reduce((accum, name) => {
+                const result = accum.value.indexOf(name + '')
                 if (result !== -1) {
-                    return {value: prev.value.substring(result + 1), position: result}
+                    return {value: accum.value.substring(result + 1), position: result}
                 } else {
                     return {value: '', position: result}
                 }
@@ -73,9 +73,17 @@ export class BasicStory extends React.Component {
         this.ref = React.createRef()
         this.id = 'react-handsontable-hoc__src-stories-Basic'
         this.state = {
+            mode: 'production',
+            logger: action('production'),
             data: [],
-            manualColumnsHide: []
+            manualColumnsHide: [],
+            rowFilter: filter
         }
+    }
+
+    onChangeMode(ev) {
+        const mode = ev.target.value
+        this.setState({mode})
     }
 
     onChangeManualColumnsHide(index, ev) {
@@ -89,17 +97,17 @@ export class BasicStory extends React.Component {
         const tokens = ev.target.value.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[^\uD800-\uDFFF]/g) || []
         names.splice(0)
         names.push(...tokens)
-        filter.reevaluate()
+        this.setState({rowFilter: filter})
     }
 
-    onClick2(ev) {
+    onClickLoadDataButton(ev) {
+        this.setState({data: data})
+    }
+
+    onClickClearLocalStorageButton(ev) {
         const hotInstance = this.ref.current.hotInstance()
         const plugin = hotInstance.getPlugin('PersistentState')
         plugin.resetValue()
-    }
-
-    onClick3(ev) {
-        this.setState({data: data})
     }
 
     render() {
@@ -109,7 +117,7 @@ export class BasicStory extends React.Component {
                     ref={this.ref}
                     id={this.id}
                     persistentState={true}
-                    mode="debug" logger={action('debug')}
+                    mode={this.state.mode} logger={this.state.logger}
                     data={this.state.data} columns={columns} colHeaders={colHeaders}
                     width="800" height="350"
                     manualColumnMove={true}
@@ -123,11 +131,25 @@ export class BasicStory extends React.Component {
                     manualColumnsHide={this.state.manualColumnsHide}
                     manualColumnResize={true}
                     // for Row Filter
-                    rowFilter={filter}
-                    onClickRowFilterIndicator={action('onClickRowFilterIndicator')}
+                    rowFilter={this.state.rowFilter}
+                    colHeaderButtonClassName={'basic-story'}
+                    afterRowFiltering={action('afterRowFiltering')}
+                    onClickColHeaderButton={action('onClickColHeaderButton')}
                 />
                 <hr/>
-                <button onClick={this.onClick3.bind(this)}>load data</button>
+                mode:
+                {
+                    ['debug', 'production'].map((mode, index) => {
+                        const checked = mode === this.state.mode
+                        const onChange = this.onChangeMode.bind(this)
+                        return (
+                            <label key={index} style={{marginLeft: '6px'}}>
+                                <input type="radio" name="mode-radio" checked={checked} value={mode} onChange={onChange}/>
+                                {mode}
+                            </label>
+                        )
+                    })
+                }
                 <br/>
                 manualColumnHide:
                 {
@@ -145,8 +167,10 @@ export class BasicStory extends React.Component {
                 }
                 <br/>
                 <label>filter by col-1: <input type="text" onChange={this.onChange.bind(this)} autoFocus={true}/></label>
-                <br/>
-                <button onClick={this.onClick2.bind(this)}>clear localstorage</button>
+                <hr/>
+                <button onClick={this.onClickLoadDataButton.bind(this)}>load data</button>
+                <span>{' '}</span>
+                <button onClick={this.onClickClearLocalStorageButton.bind(this)}>clear local storage</button>
             </div>
         )
     }
