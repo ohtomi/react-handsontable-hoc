@@ -2,6 +2,7 @@
 
 import Handsontable from 'handsontable'
 import {BasePlugin} from './BasePlugin'
+import {isHiddenColumn} from './ManualColumnsHidePlugin'
 
 import './RowFilterPlugin.css'
 
@@ -96,14 +97,14 @@ class RowFilterPlugin extends BasePlugin {
     replaceColHeaders() {
         this.debug('replaceColHeaders')
 
-        const {colHeaders2, colHeaderButtonClassName} = this.hot.getSettings()
         const renderer = (column) => {
+            const {colHeaders2, rowFilter, colHeaderButtonClassName, manualColumnResize} = this.hot.getSettings()
+            const hidden = Array.isArray(manualColumnResize) ? manualColumnResize.some(isHiddenColumn) : false
+            const active = rowFilter && rowFilter.expressions.some(e => e.physical === column)
             const label = colHeaders2[column]
-            const hidden = false
-            const active = false
-            const classNames = `react-handsontable-hoc_column-header-button ${colHeaderButtonClassName} ${hidden ? 'hidden' : ''} ${active ? 'active' : ''}`
+            const classNames = `react-handsontable-hoc_column-header-button ${colHeaderButtonClassName} ${active ? 'active' : ''}`
             const button = `<button class="${classNames}" data-column="${column}">\u25BC</button>`
-            return label + button
+            return hidden ? label : label + button
         }
         this.hot.updateSettings({colHeaders: renderer})
 

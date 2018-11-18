@@ -1,9 +1,9 @@
 /* see. https://github.com/handsontable/handsontable-pro/blob/6.1.1/dist/handsontable.full.css#L1556-L1575 */
 .react-handsontable-hoc_column-header-button {
-    background: #eee;
     border-radius: 2px;
     border: 1px solid #bbb;
     color: #bbb;
+    background-color: #eee;
     font-size: 9px;
     line-height: 9px;
     padding: 2px;
@@ -11,9 +11,11 @@
     float: right;
 }
 
+.react-handsontable-hoc_column-header-button.active:hover,
 .react-handsontable-hoc_column-header-button:hover {
     border: 1px solid #777;
     color: #777;
+    background-color: #b2b2b2;
     cursor: pointer;
 }
 
@@ -22,8 +24,4 @@
     border: 1px solid #509272;
     color: #18804e;
     background-color: #d2e0d9;
-}
-
-.react-handsontable-hoc_column-header-button.hidden {
-    display: none;
 }
