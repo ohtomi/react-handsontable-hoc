@@ -99,7 +99,7 @@ class RowFilterPlugin extends BasePlugin {
 
         const renderer = (column) => {
             const {colHeaders2, rowFilter, colHeaderButtonClassName, manualColumnResize} = this.hot.getSettings()
-            const hidden = Array.isArray(manualColumnResize) ? manualColumnResize.some(isHiddenColumn) : false
+            const hidden = Array.isArray(manualColumnResize) ? manualColumnResize.some(isHiddenColumn(column)) : false
             const active = rowFilter && rowFilter.expressions.some(e => e.physical === column)
             const label = colHeaders2[column]
             const classNames = `react-handsontable-hoc_column-header-button ${colHeaderButtonClassName} ${active ? 'active' : ''}`

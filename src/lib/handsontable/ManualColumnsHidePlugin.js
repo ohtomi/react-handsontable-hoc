@@ -105,8 +105,8 @@ const resizeColumnWidth = (hotInstance: Handsontable, currentWidths: Array<?numb
     })
 }
 
-export const isHiddenColumn = (width: ?number, column: number) => {
-    return width && width < MinimumColumnWidthByManual && i === column
+export const isHiddenColumn = (column: number) => (width: ?number, index: number) => {
+    return width && width < MinimumColumnWidthByManual && index === column
 }
 
 const pluginName = 'ManualColumnsHidePlugin'
