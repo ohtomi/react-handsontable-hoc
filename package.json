@@ -28,7 +28,7 @@
     "build-examples": "cross-env SKIP_PREFLIGHT_CHECK=true react-scripts build",
     "test": "cross-env SKIP_PREFLIGHT_CHECK=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "build": "rimraf dist && mkdirp dist && NODE_ENV=production babel src/lib --out-file dist/index.js --source-maps --ignore **/*.test.js,**/*.spec.js,__tests__,__snapshots__",
+    "build": "rimraf dist && mkdirp dist && NODE_ENV=production babel src/lib --out-dir dist/ --source-maps --ignore **/*.test.js,**/*.spec.js,__tests__,__snapshots__ --copy-files",
     "flow": "flow",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
