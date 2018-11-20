@@ -5,8 +5,7 @@
   "keywords": [
     "react",
     "handsontable",
-    "sort-columns",
-    "move-columns",
+    "sort-column",
     "hide-columns",
     "filter-rows"
   ],
