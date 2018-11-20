@@ -1,3 +1,38 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## Unreleased
+
+### Added
+
+- New properties of `HotTableContainer`
+  - `initialColumnSorting` is to sort after loading data
+  - `manualColumnsHide` is to hide columns
+  - `afterRowSelection` is to notify selected physical row index
+  - `afterRowFiltering` is to notify the number of filtered rows
+- `Handsontable` from `handsontable` is exported to support custom renderer
+
+### Changed
+
+- A type of `initialColumnSorting`'s `sortOrder` is changed from `boolean` to `text`, according to `Handsontable` v6.1.1
+- When column header button clicked, a physical column index will be passed
+- `HotTableContainer` properties
+  - from `onClickRowFilterIndicator` to `onClickColHeaderButton`
+  - from `rowFilterIndicatorClassName` to `colHeaderButtonClassName`
+
+### Fixed
+
+- An unnecessary space, occupied by hidden columns, on the right side of a table is trimmed
+
+### Removed
+
+- `HotTableContainer` properties
+  - `columnMapping`
+  - `rowHeaders`
+
 ## 0.5.1 (2017-11-06)
 
 ### Added
