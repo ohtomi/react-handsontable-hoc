@@ -28,7 +28,7 @@ type propsType = {
     width?: number,
     height?: number,
     manualColumnMove?: boolean | Array<number>,
-    selectionMode?: 'row' | 'cell' | 'range',
+    selectionMode?: 'row' | 'single' | 'range' | 'multiple',
     afterRowSelection?: (rows: Array<number>) => void,
     columnSorting?: HotTableColumnSorting,
     initialColumnSorting?: HotTableColumnSortingObject,
