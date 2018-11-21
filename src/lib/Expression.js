@@ -17,20 +17,12 @@ export class Expression {
 
 export class FilterByValues extends Expression {
 
-    constructor(symbol: string, props: Array<any>) {
-        super(symbol, props)
-    }
-
     evaluate(value: any): boolean {
         return this.props.some((prop: any): boolean => prop === value)
     }
 }
 
 export class FilterByFunction extends Expression {
-
-    constructor(symbol: string, props: (value: any) => boolean) {
-        super(symbol, props)
-    }
 
     evaluate(value: any): boolean {
         return this.props(value)
