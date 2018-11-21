@@ -1,4 +1,5 @@
 const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {
     entry: './index.js',
@@ -15,10 +16,17 @@ module.exports = {
             }
         }, {
             test: /\.css$/,
-            use: {
+            use: [{
+                loader: MiniCssExtractPlugin.loader
+            }, {
                 loader: 'css-loader'
-            }
+            }]
         }]
     },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: 'demo.css'
+        })
+    ],
     mode: process.env.WEBPACK_SERVE ? 'development' : 'production'
 }
