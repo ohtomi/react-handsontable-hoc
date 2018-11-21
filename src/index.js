@@ -1,6 +1,7 @@
 import React from 'react'
 import {render} from 'react-dom'
-import {Expressions, HotTableContainer, RowFilter} from './lib'
+
+import {Expressions, HotTableContainer, HotTablePlugins, RowFilter} from './lib'
 
 const data = [
     {'id': 11, 'name': 'ford', 'year': 2015, 'volume': 1000, 'processed': true},
@@ -27,17 +28,19 @@ const columns = [
 
 const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
-// VOLUME is hidden
-const hiddenColumns = [3]
-
-// sort by NAME
-const columnSorting = {
-    column: 4,
-    sortOrder: 'desc'
+// sort by YEAR
+const initialColumnSorting = {
+    initialConfig: {
+        column: 2,
+        sortOrder: 'desc'
+    }
 }
 
+// VOLUME is hidden
+const manualColumnsHide = [3]
+
 // filter by NAME
-const filter = new RowFilter([
+const rowFilter = new RowFilter([
     {
         physical: 1,
         expression: Expressions.get({
@@ -47,15 +50,58 @@ const filter = new RowFilter([
     }
 ])
 
-const App = () => (
-    <HotTableContainer
-        width="800" height="300"
-        data={data} columns={columns} colHeaders={colHeaders}
-        hiddenColumns={hiddenColumns}
-        columnSorting={columnSorting}
-        manualColumnMove={true}
-        manualColumnResize={true}
-        rowFilter={filter}/>
-)
+class App extends React.Component {
 
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            messages: []
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                <HotTableContainer
+                    data={data} columns={columns} colHeaders={colHeaders}
+                    width="800" height="250"
+                    manualColumnMove={true}
+                    // for Row Selection
+                    selectionMode="row"
+                    afterRowSelection={this.afterRowSelection.bind(this)}
+                    // for Initial Column Sorting
+                    columnSorting={true}
+                    initialColumnSorting={initialColumnSorting}
+                    // for Manual Column Hide
+                    manualColumnsHide={manualColumnsHide}
+                    manualColumnResize={true}
+                    // for Row Filter
+                    rowFilter={rowFilter}
+                    colHeaderButtonClassName={'my-col-header-button'}
+                    afterRowFiltering={this.afterRowFiltering.bind(this)}
+                    onClickColHeaderButton={this.showRowFilterPopover.bind(this)}
+                />
+                <textarea rows={10} cols={100} value={this.state.messages.join('\n')} readOnly={true}/>
+            </div>
+        )
+    }
+
+    afterRowSelection(rows) {
+        const messages = [`afterRowSelection(${rows}) @${new Date()}`].concat(this.state.messages)
+        this.setState({messages})
+    }
+
+    afterRowFiltering(filteredRows) {
+        const messages = [`afterRowFiltering(${filteredRows}) @${new Date()}`].concat(this.state.messages)
+        this.setState({messages})
+    }
+
+    showRowFilterPopover(column, buttonEl) {
+        const messages = [`showRowFilterPopover(${column}), ${buttonEl} @${new Date()}`].concat(this.state.messages)
+        this.setState({messages})
+    }
+}
+
+HotTablePlugins.registerPlugins()
 render(<App/>, document.getElementById('root'))

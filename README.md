@@ -12,76 +12,77 @@ A higher order component for `react-handsontable`.
 ## How to use
 
 ```javascript
-render() {
-    const data = [
-        {'id': 11, 'name': 'ford', 'year': 2015, 'volume': 1000, 'processed': true},
-        {'id': 12, 'name': 'ford', 'year': 2016, 'volume': 1000, 'processed': true},
-        {'id': 13, 'name': 'ford', 'year': 2017, 'volume': 1000, 'processed': true},
-        {'id': 14, 'name': 'ford', 'year': 2018, 'volume': 1000, 'processed': false},
-        {'id': 21, 'name': 'volvo', 'year': 2015, 'volume': 1000, 'processed': true},
-        {'id': 22, 'name': 'volvo', 'year': 2016, 'volume': 1000, 'processed': true},
-        {'id': 23, 'name': 'volvo', 'year': 2017, 'volume': 1000, 'processed': true},
-        {'id': 24, 'name': 'volvo', 'year': 2017, 'volume': 1000, 'processed': false},
-        {'id': 31, 'name': 'toyota', 'year': 2016, 'volume': 1000, 'processed': true},
-        {'id': 32, 'name': 'toyota', 'year': 2017, 'volume': 1000, 'processed': true},
-        {'id': 33, 'name': 'toyota', 'year': 2018, 'volume': 1000, 'processed': true},
-        {'id': 41, 'name': 'honda', 'year': 2015, 'volume': 1000, 'processed': true}
-    ]
+const data = [
+    {'id': 11, 'name': 'ford', 'year': 2015, 'volume': 1000, 'processed': true},
+    {'id': 12, 'name': 'ford', 'year': 2016, 'volume': 1000, 'processed': true},
+    {'id': 13, 'name': 'ford', 'year': 2017, 'volume': 1000, 'processed': true},
+    {'id': 14, 'name': 'ford', 'year': 2018, 'volume': 1000, 'processed': false},
+    {'id': 21, 'name': 'volvo', 'year': 2015, 'volume': 1000, 'processed': true},
+    {'id': 22, 'name': 'volvo', 'year': 2016, 'volume': 1000, 'processed': true},
+    {'id': 23, 'name': 'volvo', 'year': 2017, 'volume': 1000, 'processed': true},
+    {'id': 24, 'name': 'volvo', 'year': 2017, 'volume': 1000, 'processed': false},
+    {'id': 31, 'name': 'toyota', 'year': 2016, 'volume': 1000, 'processed': true},
+    {'id': 32, 'name': 'toyota', 'year': 2017, 'volume': 1000, 'processed': true},
+    {'id': 33, 'name': 'toyota', 'year': 2018, 'volume': 1000, 'processed': true},
+    {'id': 41, 'name': 'honda', 'year': 2015, 'volume': 1000, 'processed': true}
+]
 
-    const columns = [
-        {data: 'id', type: 'numeric', width: 150, readOnly: true},
-        {data: 'name', type: 'text', width: 150, readOnly: true},
-        {data: 'year', type: 'numeric', width: 150, readOnly: true},
-        {data: 'volume', type: 'numeric', width: 150, readOnly: true},
-        {data: data => data.processed ? 'Yes' : 'No', type: 'text', width: 150, readOnly: true}
-    ]
+const columns = [
+    {data: 'id', type: 'numeric', width: 150, readOnly: true},
+    {data: 'name', type: 'text', width: 150, readOnly: true},
+    {data: 'year', type: 'numeric', width: 150, readOnly: true},
+    {data: 'volume', type: 'numeric', width: 150, readOnly: true},
+    {data: data => data.processed ? 'Yes' : 'No', type: 'text', width: 150, readOnly: true}
+]
 
-    const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
+const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
-    // sort by YEAR
-    const initialColumnSorting = {
-        initialConfig: {
-            column: 2,
-            sortOrder: 'desc'
-        }
+// sort by YEAR
+const initialColumnSorting = {
+    initialConfig: {
+        column: 2,
+        sortOrder: 'desc'
     }
-
-    // VOLUME is hidden
-    const manualColumnsHide = [3]
-
-    // filter by NAME
-    const rowFilter = new RowFilter([
-        {
-            physical: 1,
-            expression: Expressions.get({
-                symbol: 'by_values',
-                props: ['ford', 'volvo']
-            })
-        }
-    ])
-
-    return (
-        <HotTableContainer
-            data={data} columns={columns} colHeaders={colHeaders}
-            width="800" height="350"
-            manualColumnMove={true}
-            // for Row Selection
-            selectionMode="row"
-            afterRowSelection={(rows) => {}}
-            // for Initial Column Sorting
-            columnSorting={true}
-            initialColumnSorting={initialColumnSorting}
-            // for Manual Column Hide
-            manualColumnsHide={manualColumnsHide}
-            manualColumnResize={true}
-            // for Row Filter
-            rowFilter={rowFilter}
-            colHeaderButtonClassName={'my-col-header-button'}
-            afterRowFiltering={(filteredRows) => {}}
-            onClickColHeaderButton={(column, buttonEl) => {}}
-        />
-    )
 }
+
+// VOLUME is hidden
+const manualColumnsHide = [3]
+
+// filter by NAME
+const rowFilter = new RowFilter([
+    {
+        physical: 1,
+        expression: Expressions.get({
+            symbol: 'by_values',
+            props: ['ford', 'volvo']
+        })
+    }
+])
+
+const App = () => (
+    <HotTableContainer
+        data={data} columns={columns} colHeaders={colHeaders}
+        width="800" height="350"
+        manualColumnMove={true}
+        // for Row Selection
+        selectionMode="row"
+        afterRowSelection={(rows) => {}}
+        // for Initial Column Sorting
+        columnSorting={true}
+        initialColumnSorting={initialColumnSorting}
+        // for Manual Column Hide
+        manualColumnsHide={manualColumnsHide}
+        manualColumnResize={true}
+        // for Row Filter
+        rowFilter={rowFilter}
+        colHeaderButtonClassName={'my-col-header-button'}
+        afterRowFiltering={(filteredRows) => {}}
+        onClickColHeaderButton={(column, buttonEl) => {}}
+    />
+)
+
+HotTablePlugins.registerPlugins()
+render(<App/>, document.getElementById('root'))
 ```
 
 ## How to build
