@@ -8,11 +8,12 @@
     "compile": "webpack --progress --profile"
   },
   "devDependencies": {
-    "@ohtomi/react-handsontable-hoc": "^0.5.1",
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "@ohtomi/react-handsontable-hoc": "file:../..",
     "babel-loader": "^8.0.2",
+    "css-loader": "^1.0.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "webpack": "^4.19.0",

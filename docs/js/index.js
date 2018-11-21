@@ -1,13 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import {Expressions, HotTableContainer, RowFilter} from '@ohtomi/react-handsontable-hoc'
+import {Expressions, HotTableContainer, HotTablePlugins, RowFilter} from '@ohtomi/react-handsontable-hoc'
 
 
 class Demo extends React.Component {
 
     constructor(props) {
         super(props)
+
+        this.state = {
+            messages: []
+        }
     }
 
     render() {
@@ -36,17 +40,19 @@ class Demo extends React.Component {
 
         const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
-        // VOLUME is hidden
-        const hiddenColumns = [3]
-
-        // sort by NAME
-        const columnSorting = {
-            column: 4,
-            sortOrder: 'desc'
+        // sort by YEAR
+        const initialColumnSorting = {
+            initialConfig: {
+                column: 2,
+                sortOrder: 'desc'
+            }
         }
 
+        // VOLUME is hidden
+        const manualColumnsHide = [3]
+
         // filter by NAME
-        const filter = new RowFilter([
+        const rowFilter = new RowFilter([
             {
                 physical: 1,
                 expression: Expressions.get({
@@ -57,18 +63,48 @@ class Demo extends React.Component {
         ])
 
         return (
-            <HotTableContainer
-                width="800" height="300"
-                data={data} columns={columns} colHeaders={colHeaders}
-                hiddenColumns={hiddenColumns}
-                columnSorting={columnSorting}
-                manualColumnMove={true}
-                manualColumnResize={true}
-                rowFilter={filter}/>
+            <div>
+                <HotTableContainer
+                    data={data} columns={columns} colHeaders={colHeaders}
+                    width="800" height="350"
+                    manualColumnMove={true}
+                    // for Row Selection
+                    selectionMode="row"
+                    afterRowSelection={this.afterRowSelection.bind(this)}
+                    // for Initial Column Sorting
+                    columnSorting={true}
+                    initialColumnSorting={initialColumnSorting}
+                    // for Manual Column Hide
+                    manualColumnsHide={manualColumnsHide}
+                    manualColumnResize={true}
+                    // for Row Filter
+                    rowFilter={rowFilter}
+                    colHeaderButtonClassName={'my-col-header-button'}
+                    afterRowFiltering={this.afterRowFiltering.bind(this)}
+                    onClickColHeaderButton={this.showRowFilterPopover.bind(this)}
+                />
+                <textarea>{this.state.message}</textarea>
+            </div>
         )
+    }
+
+    afterRowSelection(rows) {
+        const messages = this.state.messages.concat(`afterRowSelection(${rows})`)
+        this.setState({messages})
+    }
+
+    afterRowFiltering(filteredRows) {
+        const messages = this.state.messages.concat(`afterRowFiltering(${filteredRows})`)
+        this.setState({messages})
+    }
+
+    showRowFilterPopover(column, buttonEl) {
+        const messages = this.state.messages.concat(`showRowFilterPopover(${column}), ${buttonEl}`)
+        this.setState({messages})
     }
 }
 
+HotTablePlugins.registerPlugins()
 
 const containerEl = document.getElementById('root')
 

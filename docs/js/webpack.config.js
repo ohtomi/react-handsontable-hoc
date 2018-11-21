@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 
 module.exports = {
     entry: './index.js',
@@ -13,7 +13,12 @@ module.exports = {
             use: {
                 loader: 'babel-loader'
             }
+        }, {
+            test: /\.css$/,
+            use: {
+                loader: 'css-loader'
+            }
         }]
     },
     mode: process.env.WEBPACK_SERVE ? 'development' : 'production'
-};
+}
