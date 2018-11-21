@@ -38,17 +38,19 @@ render() {
 
     const colHeaders = ['ID', 'NAME', 'YEAR', 'VOLUME', 'PROCESSED?']
 
-    // VOLUME is hidden
-    const hiddenColumns = [3]
-
-    // sort by NAME
-    const columnSorting = {
-        column: 4,
-        sortOrder: 'desc'
+    // sort by YEAR
+    const initialColumnSorting = {
+        initialConfig: {
+            column: 2,
+            sortOrder: 'desc'
+        }
     }
 
+    // VOLUME is hidden
+    const manualColumnsHide = [3]
+
     // filter by NAME
-    const filter = new RowFilter([
+    const rowFilter = new RowFilter([
         {
             physical: 1,
             expression: Expressions.get({
@@ -60,13 +62,24 @@ render() {
 
     return (
         <HotTableContainer
-            width="800" height="300"
             data={data} columns={columns} colHeaders={colHeaders}
-            hiddenColumns={hiddenColumns}
-            columnSorting={columnSorting}
+            width="800" height="350"
             manualColumnMove={true}
+            // for Row Selection
+            selectionMode="row"
+            afterRowSelection={(rows) => {}}
+            // for Initial Column Sorting
+            columnSorting={true}
+            initialColumnSorting={initialColumnSorting}
+            // for Manual Column Hide
+            manualColumnsHide={manualColumnsHide}
             manualColumnResize={true}
-            rowFilter={filter}/>
+            // for Row Filter
+            rowFilter={rowFilter}
+            colHeaderButtonClassName={'my-col-header-button'}
+            afterRowFiltering={(filteredRows) => {}}
+            onClickColHeaderButton={(column, buttonEl) => {}}
+        />
     )
 }
 ```
