@@ -71,7 +71,7 @@ export class BasicStory extends React.Component {
     onChangeManualColumnsHide(index, ev) {
         const column = +index
         const checked = ev.target.checked
-        const manualColumnsHide = this.state.manualColumnsHide.filter(v => v !== column).concat(checked ? [column] : [])
+        const manualColumnsHide = this.state.manualColumnsHide.slice(0).filter(v => v !== column).concat(checked ? [column] : [])
         this.setState({manualColumnsHide})
     }
 
@@ -90,21 +90,24 @@ export class BasicStory extends React.Component {
 
     onChangeRowFilterValue(column, ev) {
         const expected = ev.target.value
-        const {rowFilter, popover} = this.state
-        rowFilter.expressions = rowFilter.expressions.filter(e => e.physical !== column)
-            .concat({
-                physical: column,
-                expression: Expressions.byFunction((value) => {
-                    if (columns[column].type === 'text') {
-                        return value.indexOf(expected) !== -1
-                    } else if (columns[column].type === 'numeric') {
-                        return value > +expected
-                    } else {
-                        return true
-                    }
+        const rowFilter = new RowFilter(
+            this.state.rowFilter.expressions.slice(0).filter(e => e.physical !== column)
+                .concat({
+                    physical: column,
+                    expression: Expressions.byFunction((value) => {
+                        if (columns[column].type === 'text') {
+                            return value.indexOf(expected) !== -1
+                        } else if (columns[column].type === 'numeric') {
+                            return value > +expected
+                        } else {
+                            return true
+                        }
+                    })
                 })
-            })
-        popover.values[column] = expected
+        )
+        const popover = Object.assign({}, this.state.popover, {
+            values: this.state.popover.values.map((v, i) => i !== column ? v : expected)
+        })
         this.setState({rowFilter, popover})
     }
 
