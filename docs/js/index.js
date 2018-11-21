@@ -66,7 +66,7 @@ class Demo extends React.Component {
             <div>
                 <HotTableContainer
                     data={data} columns={columns} colHeaders={colHeaders}
-                    width="800" height="350"
+                    width="800" height="250"
                     manualColumnMove={true}
                     // for Row Selection
                     selectionMode="row"
