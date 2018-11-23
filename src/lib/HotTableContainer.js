@@ -3,6 +3,7 @@
 import React from 'react'
 import Handsontable from 'handsontable'
 import {HotTable} from '@handsontable/react'
+import {shallowEqualProps} from 'shallow-equal-props'
 
 import type {
     HotTableColHeaders,
@@ -40,7 +41,11 @@ type propsType = {
     onClickColHeaderButton?: (ev: MouseEvent) => void
 };
 
-export const HotTableContainer = React.forwardRef((props: propsType, ref: { current: any }) => {
+const areEqual = (prevProps: propsType, nextProps: propsType) => {
+    return shallowEqualProps(prevProps, nextProps, {debug: false})
+}
+
+export const HotTableContainer = React.memo(React.forwardRef((props: propsType, ref: { current: any }) => {
     const {mode, logger, data, colHeaders} = props
 
     const debug = (...messages: any) => {
@@ -70,6 +75,6 @@ export const HotTableContainer = React.forwardRef((props: propsType, ref: { curr
     return (
         <HotTable ref={ref} {...props} logger={debug} data2={data2} colHeaders2={colHeaders}/>
     )
-})
+}), areEqual)
 
 export {Handsontable}

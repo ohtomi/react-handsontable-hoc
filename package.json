@@ -48,7 +48,8 @@
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-scripts": "2.1.1",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "shallow-equal-props": "^1.0.2"
   },
   "browserslist": [
     ">0.2%",
