@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import {render} from 'react-dom'
 
 import {Expressions, HotTableContainer, HotTablePlugins, RowFilter} from '@ohtomi/react-handsontable-hoc'
 
@@ -56,6 +56,10 @@ class Demo extends React.Component {
     constructor(props) {
         super(props)
 
+        this.afterRowSelection = this.afterRowSelection.bind(this)
+        this.afterRowFiltering = this.afterRowFiltering.bind(this)
+        this.showRowFilterPopover = this.showRowFilterPopover.bind(this)
+
         this.state = {
             messages: []
         }
@@ -70,7 +74,7 @@ class Demo extends React.Component {
                     manualColumnMove={true}
                     // for Row Selection
                     selectionMode="row"
-                    afterRowSelection={this.afterRowSelection.bind(this)}
+                    afterRowSelection={this.afterRowSelection}
                     // for Initial Column Sorting
                     columnSorting={true}
                     initialColumnSorting={initialColumnSorting}
@@ -80,25 +84,29 @@ class Demo extends React.Component {
                     // for Row Filter
                     rowFilter={rowFilter}
                     colHeaderButtonClassName={'my-col-header-button'}
-                    afterRowFiltering={this.afterRowFiltering.bind(this)}
-                    onClickColHeaderButton={this.showRowFilterPopover.bind(this)}
+                    afterRowFiltering={this.afterRowFiltering}
+                    onClickColHeaderButton={this.showRowFilterPopover}
                 />
-                <textarea rows={10} cols={100} value={this.state.messages.join('\n')} readOnly={true}/>
+                <textarea rows={5} cols={100} value={this.state.messages.join('\n')} readOnly={true}/>
             </div>
         )
     }
 
     afterRowSelection(rows) {
+        // rows is an array of physical row index
         const messages = [`afterRowSelection(${rows}) @${new Date()}`].concat(this.state.messages)
         this.setState({messages})
     }
 
     afterRowFiltering(filteredRows) {
+        // filteredRows is the number of rows filtered by given rowFilter
         const messages = [`afterRowFiltering(${filteredRows}) @${new Date()}`].concat(this.state.messages)
         this.setState({messages})
     }
 
     showRowFilterPopover(column, buttonEl) {
+        // column is a physical column index of the clicked column header button
+        // buttonEl is an HTML element of the clicked column header button
         const messages = [`showRowFilterPopover(${column}), ${buttonEl} @${new Date()}`].concat(this.state.messages)
         this.setState({messages})
     }
@@ -106,6 +114,4 @@ class Demo extends React.Component {
 
 HotTablePlugins.registerPlugins()
 
-const containerEl = document.getElementById('root')
-
-ReactDOM.render(<Demo/>, containerEl)
+render(<Demo/>, document.getElementById('root'))

@@ -59,6 +59,19 @@ const rowFilter = new RowFilter([
     }
 ])
 
+const afterRowSelection = (rows) => {
+    // rows is an array of physical row index
+}
+
+const afterRowFiltering = (filteredRows) => {
+    // filteredRows is the number of rows filtered by given rowFilter
+}
+
+const onClickColHeaderButton = (column, buttonEl) => {
+    // column is a physical column index of the clicked column header button
+    // buttonEl is an HTML element of the clicked column header button
+}
+
 const App = () => (
     <HotTableContainer
         data={data} columns={columns} colHeaders={colHeaders}
@@ -66,7 +79,7 @@ const App = () => (
         manualColumnMove={true}
         // for Row Selection
         selectionMode="row"
-        afterRowSelection={(rows) => {}}
+        afterRowSelection={afterRowSelection}
         // for Initial Column Sorting
         columnSorting={true}
         initialColumnSorting={initialColumnSorting}
@@ -76,8 +89,8 @@ const App = () => (
         // for Row Filter
         rowFilter={rowFilter}
         colHeaderButtonClassName={'my-col-header-button'}
-        afterRowFiltering={(filteredRows) => {}}
-        onClickColHeaderButton={(column, buttonEl) => {}}
+        afterRowFiltering={afterRowFiltering}
+        onClickColHeaderButton={onClickColHeaderButton}
     />
 )
 
