@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `HotTableContainer` properties
   - from `onClickRowFilterIndicator` to `onClickColHeaderButton`
   - from `rowFilterIndicatorClassName` to `colHeaderButtonClassName`
+- `HotTableContainer` is wrapped by `React.memo` to make it pure component
+- Remove `reevaluate` method from `RowFilter`
 
 ### Fixed
 
@@ -31,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `HotTableContainer` properties
   - `columnMapping`
+  - `hiddenColumns`
   - `rowHeaders`
 
 ## 0.5.1 (2017-11-06)
