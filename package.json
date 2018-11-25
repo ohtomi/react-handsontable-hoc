@@ -42,7 +42,7 @@
     "@babel/cli": "^7.1.2",
     "@storybook/addon-actions": "^4.0.9",
     "@storybook/addon-links": "^4.0.9",
-    "@storybook/react": "^4.0.4",
+    "@storybook/react": "^4.0.9",
     "cross-env": "^5.2.0",
     "flow-bin": "^0.86.0",
     "flow-typed": "^2.2.3",
