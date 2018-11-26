@@ -1,6 +1,6 @@
 {
   "name": "@ohtomi/react-handsontable-hoc",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "A higher order component of react-handsontable",
   "keywords": [
     "react",
