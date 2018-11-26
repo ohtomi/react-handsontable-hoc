@@ -1,1 +1,1 @@
-*.test.js
+/dist/**/*.test.js
