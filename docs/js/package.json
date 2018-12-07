@@ -13,7 +13,7 @@
     "@babel/preset-react": "^7.0.0",
     "@ohtomi/react-handsontable-hoc": "file:../..",
     "babel-loader": "^8.0.2",
-    "css-loader": "^1.0.1",
+    "css-loader": "^2.0.0",
     "mini-css-extract-plugin": "^0.4.5",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
