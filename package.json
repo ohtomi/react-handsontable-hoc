@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
-    "@storybook/addon-actions": "^4.1.6",
+    "@storybook/addon-actions": "^5.0.0",
     "@storybook/addon-links": "^4.1.6",
     "@storybook/react": "^4.1.6",
     "cross-env": "^5.2.0",
