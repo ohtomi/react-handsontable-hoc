@@ -102,6 +102,7 @@ render(<App/>, document.getElementById('root'))
 
 ```bash
 $ npm install
+$ CI=true npm test
 $ npm run build
 ```
 
