@@ -26,5 +26,6 @@ yarn-error.log*
 /.idea
 /.cache
 /dist
+/storybook-static
 package-lock.json
 yarn.lock
