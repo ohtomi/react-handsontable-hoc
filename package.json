@@ -40,17 +40,17 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
-    "@storybook/addon-actions": "^5.0.0",
-    "@storybook/addon-links": "^5.0.0",
-    "@storybook/react": "^5.0.0",
+    "@storybook/addon-actions": "^5.0.3",
+    "@storybook/addon-links": "^5.0.3",
+    "@storybook/react": "^5.0.3",
     "cross-env": "^5.2.0",
     "flow-bin": "^0.95.1",
     "flow-typed": "^2.2.3",
     "mkdirp": "^0.5.1",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
     "react-scripts": "2.1.8",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.3"
   },
   "browserslist": [
     ">0.2%",
