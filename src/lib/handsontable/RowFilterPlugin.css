@@ -7,8 +7,7 @@
     font-size: 9px;
     line-height: 9px;
     padding: 2px;
-    margin: 1px 1px 0 5px;
-    float: right;
+    margin-left: 5px;
 }
 
 .react-handsontable-hoc_column-header-button.active:hover,
