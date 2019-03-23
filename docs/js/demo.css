@@ -6,6 +6,8 @@
     background-color: #eee;
     font-size: 9px;
     line-height: 9px;
+    position: relative;
+    top: -2px;
     padding: 2px;
     margin-left: 5px;
 }
