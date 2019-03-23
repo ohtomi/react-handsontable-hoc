@@ -34,8 +34,9 @@
     "build-storybook": "build-storybook -s public"
   },
   "dependencies": {
-    "@handsontable/react": "^3.0.0",
-    "handsontable": "^7.0.0",
+    "@handsontable/react": "^2.1.0",
+    "handsontable": "^6.2.2",
+    "numbro": "2.1.0",
     "shallow-equal-props": "^1.0.2"
   },
   "devDependencies": {
@@ -47,8 +48,8 @@
     "flow-bin": "^0.95.1",
     "flow-typed": "^2.2.3",
     "mkdirp": "^0.5.1",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
+    "react": "^16.8.5",
+    "react-dom": "^16.8.5",
     "react-scripts": "2.1.8",
     "rimraf": "^2.6.3"
   },
