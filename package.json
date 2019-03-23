@@ -9,7 +9,7 @@
     "hide-columns",
     "filter-rows"
   ],
-  "homepage": "https://github.com/ohtomi/react-handsontable-hoc",
+  "homepage": ".",
   "bugs": {
     "url": "https://github.com/ohtomi/react-handsontable-hoc/issues"
   },
