@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.6.6 (2019-03-23)
+
+### Changed
+
+- Upgrade `react` packages from `16.6.3` to `16.8.5`
+- Upgrade `handsontable` package from `6.1.1` to `6.2.2`
+
+### Fixed
+
+- Use `numbro` `2.1.0` to avoid `RangeError` problem caused by `2.1.1`
+  - see [Range Error after upgrade to 2.1.1](https://github.com/BenjaminVanRyseghem/numbro/issues/402)
+- Remove `float` from row filter button's style and tweak its position
+
 ## 0.6.5 (2018-11-27)
 
 ### Fixed
