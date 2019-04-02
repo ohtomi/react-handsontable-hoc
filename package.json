@@ -45,7 +45,7 @@
     "@storybook/addon-links": "^5.0.3",
     "@storybook/react": "^5.0.3",
     "cross-env": "^5.2.0",
-    "flow-bin": "^0.95.1",
+    "flow-bin": "^0.96.0",
     "flow-typed": "^2.2.3",
     "mkdirp": "^0.5.1",
     "react": "^16.8.5",
