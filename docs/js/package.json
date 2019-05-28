@@ -14,7 +14,7 @@
     "@ohtomi/react-handsontable-hoc": "file:../..",
     "babel-loader": "^8.0.5",
     "css-loader": "^2.1.1",
-    "mini-css-extract-plugin": "^0.6.0",
+    "mini-css-extract-plugin": "^0.7.0",
     "react": "^16.8.5",
     "react-dom": "^16.8.5",
     "webpack": "^4.29.6",
